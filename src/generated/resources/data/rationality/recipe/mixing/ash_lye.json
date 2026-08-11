@@ -1,0 +1,28 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "rationality:plant_ash"
+    },
+    {
+      "item": "rationality:plant_ash"
+    },
+    {
+      "item": "rationality:plant_ash"
+    },
+    {
+      "item": "rationality:plant_ash"
+    },
+    {
+      "type": "neoforge:tag",
+      "amount": 1000,
+      "tag": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "amount": 1000,
+      "id": "rationality:ash_lye"
+    }
+  ]
+}

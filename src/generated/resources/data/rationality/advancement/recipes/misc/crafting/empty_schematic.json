@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_light_blue_paper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "rationality:light_blue_paper"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "rationality:crafting/empty_schematic"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_light_blue_paper"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "rationality:crafting/empty_schematic"
+    ]
+  }
+}

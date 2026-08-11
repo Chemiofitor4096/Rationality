@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "rationality:light_blue_paper"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "create:empty_schematic"
+  }
+}

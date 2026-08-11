@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "createdieselgenerators"
+    }
+  ],
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:paper"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 10,
+      "fluid": "createdieselgenerators:plant_oil"
+    }
+  ],
+  "results": [
+    {
+      "id": "rationality:oilpaper"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "type": "createdieselgenerators:basin_fermenting",
+  "ingredients": [
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "rationality:syrup"
+    }
+  ],
+  "processing_time": 400,
+  "results": [
+    {
+      "amount": 1000,
+      "id": "createdieselgenerators:ethanol"
+    }
+  ]
+}

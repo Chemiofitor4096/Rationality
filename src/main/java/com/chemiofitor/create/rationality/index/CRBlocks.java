@@ -1,0 +1,73 @@
+package com.chemiofitor.create.rationality.index;
+
+import com.chemiofitor.create.rationality.common.block.HeadboxBlock;
+import com.chemiofitor.create.rationality.common.block.MechanicalPulperBlock;
+import com.chemiofitor.create.rationality.common.block.PapermakingDepotBlock;
+import com.chemiofitor.create.rationality.common.block.PapermakingFrameBlock;
+import com.simibubi.create.AllBlocks;
+import com.simibubi.create.AllDisplaySources;
+import com.simibubi.create.AllMountedStorageTypes;
+import com.simibubi.create.content.logistics.depot.MountedDepotInteractionBehaviour;
+import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
+import com.simibubi.create.foundation.data.AssetLookup;
+import com.simibubi.create.foundation.data.SharedProperties;
+import com.tterrag.registrate.util.entry.BlockEntry;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+
+import static com.chemiofitor.create.rationality.CreateRationality.REGISTRATE;
+import static com.simibubi.create.api.behaviour.display.DisplaySource.displaySource;
+import static com.simibubi.create.api.behaviour.interaction.MovingInteractionBehaviour.interactionBehaviour;
+import static com.simibubi.create.api.contraption.storage.item.MountedItemStorageType.mountedItemStorage;
+import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
+import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
+import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
+
+public class CRBlocks {
+    public static final BlockEntry<MechanicalPulperBlock> MECHANICAL_PULPER =
+            REGISTRATE.block("mechanical_pulper", MechanicalPulperBlock::new)
+                    .initialProperties(SharedProperties::stone)
+                    .properties(p -> p.noOcclusion()
+                            .mapColor(MapColor.STONE))
+                    .transform(axeOrPickaxe())
+                    .blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.partialBaseModel(c, p)))
+                    .item(AssemblyOperatorBlockItem::new)
+                    .transform(customItemModel())
+                    .register();
+
+    public static final BlockEntry<HeadboxBlock> HEADBOX =
+            REGISTRATE.block("headbox", HeadboxBlock::new)
+                    .initialProperties(SharedProperties::copperMetal)
+                    .transform(pickaxeOnly())
+                    .blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.standardModel(c, p)))
+                    .simpleItem()
+                    .register();
+
+    public static final BlockEntry<PapermakingFrameBlock> PAPERMAKING_FRAME =
+            REGISTRATE.block("papermaking_frame", PapermakingFrameBlock::new)
+                    .initialProperties(SharedProperties::wooden)
+                    .transform(pickaxeOnly())
+                    .blockstate((c, p) -> p.simpleBlock(c.get(), AssetLookup.standardModel(c, p)))
+                    .simpleItem()
+                    .register();
+
+    public static final BlockEntry<PapermakingDepotBlock> PAPERMAKING_DEPOT = REGISTRATE.block("papermaking_depot", PapermakingDepotBlock::new)
+            .initialProperties(SharedProperties::stone)
+            .properties(p -> p.mapColor(MapColor.COLOR_BROWN))
+            .blockstate((c, p) -> p.simpleBlock(c.get(), p.models().getExistingFile(p.modLoc("block/papermaking_depot"))))
+            .transform(axeOrPickaxe())
+            .transform(displaySource(AllDisplaySources.ITEM_NAMES))
+            .onRegister(interactionBehaviour(new MountedDepotInteractionBehaviour()))
+            .transform(mountedItemStorage(AllMountedStorageTypes.DEPOT))
+            .loot((p, b) -> p.add(b, p.createSingleItemTable(AllBlocks.DEPOT.get())
+                    .withPool(p.applyExplosionCondition(PAPERMAKING_FRAME.get(), LootPool.lootPool()
+                            .setRolls(ConstantValue.exactly(1.0F))
+                            .add(LootItem.lootTableItem(PAPERMAKING_FRAME.get()))))))
+            .item()
+            .build()
+            .register();
+
+    public static void register() {}
+}

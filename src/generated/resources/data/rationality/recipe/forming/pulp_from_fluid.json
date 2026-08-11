@@ -1,0 +1,21 @@
+{
+  "type": "rationality:forming",
+  "ingredients": [
+    {
+      "item": "rationality:papermaking_frame"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 100,
+      "fluid": "rationality:pulp"
+    }
+  ],
+  "results": [
+    {
+      "id": "rationality:papermaking_frame"
+    },
+    {
+      "id": "create:pulp"
+    }
+  ]
+}

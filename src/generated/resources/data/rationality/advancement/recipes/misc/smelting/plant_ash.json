@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_pulpifiable": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#create:pulpifiable"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "rationality:smelting/plant_ash"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_pulpifiable"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "rationality:smelting/plant_ash"
+    ]
+  }
+}

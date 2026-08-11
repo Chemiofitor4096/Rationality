@@ -1,0 +1,16 @@
+{
+  "values": [
+    {
+      "id": "createdieselgenerators:wood_chip",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:tree_bark",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:straw",
+      "required": false
+    }
+  ]
+}

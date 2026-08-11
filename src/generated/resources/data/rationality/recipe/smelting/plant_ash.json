@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.0,
+  "ingredient": {
+    "tag": "create:pulpifiable"
+  },
+  "result": {
+    "count": 1,
+    "id": "rationality:plant_ash"
+  }
+}

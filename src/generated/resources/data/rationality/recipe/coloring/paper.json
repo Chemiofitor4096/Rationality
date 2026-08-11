@@ -1,0 +1,14 @@
+{
+  "type": "create_dragons_plus:coloring",
+  "color": "white",
+  "ingredients": [
+    {
+      "tag": "rationality:color_paper"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:paper"
+    }
+  ]
+}

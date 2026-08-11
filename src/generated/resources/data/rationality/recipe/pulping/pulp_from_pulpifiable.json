@@ -1,0 +1,28 @@
+{
+  "type": "rationality:pulping",
+  "ingredients": [
+    {
+      "tag": "create:pulpifiable"
+    },
+    {
+      "tag": "create:pulpifiable"
+    },
+    {
+      "tag": "create:pulpifiable"
+    },
+    {
+      "tag": "create:pulpifiable"
+    },
+    {
+      "type": "neoforge:tag",
+      "amount": 1000,
+      "tag": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "amount": 500,
+      "id": "rationality:pulp"
+    }
+  ]
+}

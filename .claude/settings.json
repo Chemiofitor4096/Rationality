@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/hualo/.gradle/**)",
+      "Bash(jar tf *)",
+      "Bash(grep -E \"\\\\.java$\")",
+      "Bash(cd /tmp)",
+      "Bash(jar xf *)",
+      "Bash(./gradlew build *)",
+      "Bash(ls \"C:/Users/hualo/.claude/skills/blockbench-use/\")",
+      "Read(//c/Users/hualo/.agents/skills/blockbench-use/**)",
+      "Read(//c/Users/hualo/.claude/skills/**)",
+      "Bash(find \"C:/Users/hualo/.claude\" -name \"*.json\" -path \"*mcp*\" 2>/dev/null | head -5)",
+      "Read(//c/Users/hualo/.claude/**)"
+    ]
+  }
+}

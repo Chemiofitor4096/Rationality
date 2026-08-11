@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "create_bic_bit:crushed_sunflower_seeds",
+      "required": false
+    },
+    {
+      "id": "farmersdelight:cabbage_seeds",
+      "required": false
+    }
+  ]
+}

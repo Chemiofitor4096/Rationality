@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "AXA",
+    "XXX",
+    "AXA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "rationality:papermaking_frame"
+  }
+}

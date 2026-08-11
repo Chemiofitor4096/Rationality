@@ -1,0 +1,19 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "minecraft:bone"
+    },
+    {
+      "type": "neoforge:tag",
+      "amount": 500,
+      "tag": "rationality:black_liquor"
+    }
+  ],
+  "results": [
+    {
+      "count": 6,
+      "id": "minecraft:bone_meal"
+    }
+  ]
+}

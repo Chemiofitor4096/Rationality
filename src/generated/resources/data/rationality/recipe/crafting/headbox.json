@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:iron_bars"
+    },
+    "X": {
+      "item": "create:copper_casing"
+    }
+  },
+  "pattern": [
+    "   ",
+    " X ",
+    " A "
+  ],
+  "result": {
+    "count": 1,
+    "id": "rationality:headbox"
+  }
+}

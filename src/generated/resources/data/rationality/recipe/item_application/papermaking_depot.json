@@ -1,0 +1,16 @@
+{
+  "type": "create:item_application",
+  "ingredients": [
+    {
+      "item": "create:depot"
+    },
+    {
+      "item": "rationality:papermaking_frame"
+    }
+  ],
+  "results": [
+    {
+      "id": "rationality:papermaking_depot"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "createbigcannons"
+    },
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "create_confectionery"
+    }
+  ],
+  "type": "createbigcannons:melting",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "item": "create_confectionery:bar_of_ruby_chocolate"
+    }
+  ],
+  "results": [
+    {
+      "amount": 250,
+      "id": "create_confectionery:ruby_chocolate"
+    }
+  ]
+}

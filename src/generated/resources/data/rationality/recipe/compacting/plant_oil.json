@@ -1,0 +1,29 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "createdieselgenerators"
+    }
+  ],
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "tag": "rationality:oil_pressing_raw_material"
+    },
+    {
+      "tag": "rationality:oil_pressing_raw_material"
+    },
+    {
+      "tag": "rationality:oil_pressing_raw_material"
+    },
+    {
+      "tag": "rationality:oil_pressing_raw_material"
+    }
+  ],
+  "results": [
+    {
+      "amount": 500,
+      "id": "createdieselgenerators:plant_oil"
+    }
+  ]
+}

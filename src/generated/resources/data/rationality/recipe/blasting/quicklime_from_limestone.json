@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.0,
+  "ingredient": {
+    "item": "create:limestone"
+  },
+  "result": {
+    "count": 4,
+    "id": "rationality:quicklime"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "rationality:quicklime"
+    },
+    {
+      "type": "neoforge:tag",
+      "amount": 100,
+      "tag": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "id": "rationality:slaked_lime"
+    }
+  ]
+}

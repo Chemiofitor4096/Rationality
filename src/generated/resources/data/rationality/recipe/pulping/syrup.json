@@ -1,0 +1,29 @@
+{
+  "type": "rationality:pulping",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "tag": "rationality:sugar_raw_material"
+    },
+    {
+      "tag": "rationality:sugar_raw_material"
+    },
+    {
+      "tag": "rationality:sugar_raw_material"
+    },
+    {
+      "tag": "rationality:sugar_raw_material"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "minecraft:water"
+    }
+  ],
+  "results": [
+    {
+      "amount": 1000,
+      "id": "rationality:syrup"
+    }
+  ]
+}

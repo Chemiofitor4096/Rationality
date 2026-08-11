@@ -1,0 +1,17 @@
+{
+  "type": "createdieselgenerators:casting",
+  "ingredients": [
+    {
+      "type": "fluid_stack",
+      "fluid": "create_confectionery:black_chocolate",
+      "amount": 250
+    }
+  ],
+  "mold": "createdieselgenerators:bar",
+  "results": [
+    {
+      "id": "create_confectionery:bar_of_black_chocolate",
+      "count": 1
+    }
+  ]
+}

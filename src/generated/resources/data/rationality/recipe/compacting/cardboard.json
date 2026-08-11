@@ -1,0 +1,19 @@
+{
+  "type": "create:compacting",
+  "ingredients": [
+    {
+      "item": "create:pulp"
+    },
+    {
+      "item": "create:pulp"
+    },
+    {
+      "item": "create:pulp"
+    }
+  ],
+  "results": [
+    {
+      "id": "create:cardboard"
+    }
+  ]
+}

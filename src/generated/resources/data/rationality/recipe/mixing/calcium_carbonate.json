@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "rationality:quicklime"
+    },
+    {
+      "type": "neoforge:tag",
+      "amount": 500,
+      "tag": "rationality:ash_lye"
+    }
+  ],
+  "results": [
+    {
+      "id": "rationality:calcium_carbonate"
+    },
+    {
+      "amount": 500,
+      "id": "rationality:lye"
+    }
+  ]
+}

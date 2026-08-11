@@ -1,0 +1,14 @@
+{
+  "type": "rationality:pulping",
+  "ingredients": [
+    {
+      "item": "minecraft:glowstone"
+    }
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "minecraft:glowstone_dust"
+    }
+  ]
+}

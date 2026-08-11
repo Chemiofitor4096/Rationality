@@ -1,0 +1,17 @@
+{
+  "type": "rationality:pulping",
+  "ingredients": [
+    {
+      "item": "minecraft:gravel"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:sand"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:flint"
+    }
+  ]
+}

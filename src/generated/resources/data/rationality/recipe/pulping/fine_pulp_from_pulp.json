@@ -1,0 +1,22 @@
+{
+  "type": "rationality:pulping",
+  "ingredients": [
+    {
+      "item": "rationality:quicklime"
+    },
+    {
+      "item": "rationality:quicklime"
+    },
+    {
+      "type": "neoforge:single",
+      "amount": 1000,
+      "fluid": "rationality:pulp"
+    }
+  ],
+  "results": [
+    {
+      "amount": 1000,
+      "id": "rationality:fine_pulp"
+    }
+  ]
+}
