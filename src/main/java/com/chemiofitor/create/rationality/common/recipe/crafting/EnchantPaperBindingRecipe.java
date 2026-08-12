@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -50,11 +51,14 @@ public class EnchantPaperBindingRecipe extends CustomRecipe {
     @Override
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider) {
         ItemEnchantments.Mutable merged = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        int maxRepairCost = 0;
 
         for (int i = 0; i < input.size(); i++) {
             ItemStack stack = input.getItem(i);
             if (!(stack.getItem() instanceof EnchantingPaperItem))
                 continue;
+
+            maxRepairCost = Math.max(maxRepairCost, stack.getOrDefault(DataComponents.REPAIR_COST, 0));
 
             ItemEnchantments enchants = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
             for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
@@ -68,6 +72,8 @@ public class EnchantPaperBindingRecipe extends CustomRecipe {
         ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
         book.set(DataComponents.STORED_ENCHANTMENTS, merged.toImmutable());
         book.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
+        // 绑定 = 一次合并操作：书的累积惩罚按原版铁砧公式 = max(纸惩罚)×2+1（全 0 纸 → 1）
+        book.set(DataComponents.REPAIR_COST, AnvilMenu.calculateIncreasedRepairCost(maxRepairCost));
         return book;
     }
 
