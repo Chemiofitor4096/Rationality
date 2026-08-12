@@ -7,7 +7,7 @@
 - 模组 ID：`rationality`，包根：`com.chemiofitor.create.rationality`
 - Java 21，Parchment 映射（2024.11.17），NeoGradle `net.neoforged.moddev` 2.0.141
 - 注册全部走 **CreateRegistrate**（`CreateRationality.REGISTRATE`）
-- 项目目前**未初始化 git 仓库**；无单元测试/Lint，QA 依赖游戏内运行
+- 项目为 git 仓库（main 分支）；无单元测试/Lint，QA 依赖游戏内运行
 
 ## 技术栈速查
 
@@ -33,14 +33,14 @@ src/main/java/com/chemiofitor/create/rationality/
     block/                      # 方块类（含 BlackLiquorBlock 污染流体方块）
     block/behaviour/            # LowBeltProcessingBehaviour、PapermakingBlockSpoutingBehaviour
     block/entity/               # Headbox / MechanicalPulper / PapermakingDepot 方块实体
-    item/                       # ColorPaperItem
-    recipe/                     # PulpingRecipe、FormingRecipe、（未启用的 PaperColoring）
+    item/                       # ColorPaperItem、EnchantingPaperItem
+    recipe/                     # PulpingRecipe、FormingRecipe、crafting/（EnchantPaperBindingRecipe、未启用的 PaperColoring）
     world/                      # PollutionSavedData（黑液污染区块标记，按维度持久化）
   client/
     renderer/                   # HeadboxRenderer、MechanicalPulperRenderer
     visual/                     # PulperVisual（Flywheel）
     PollutionIndicatorClient.java # 污染指示仪 model override predicate + 污染状态缓存
-  event/                        # CropGrowHandler、EntityTickHandler、PollutionSyncHandler
+  event/                        # CropGrowHandler、EntityTickHandler、PollutionSyncHandler、EnchantingHandler
   network/                      # PollutionStatusPayload（playToClient 污染状态同步）
   compat/
     jei/                        # JEI 插件、配方分类与动画
@@ -52,7 +52,7 @@ src/main/java/com/chemiofitor/create/rationality/
     recipe/                     # 抽象配方生成基类（FormingRecipeGen、PulpingRecipeGen 等）
     recipe/ban/RecipeTargets.java  # 配方禁令清单（见 04-recipe-ban.md）
     provider/                   # 12 个具体配方生成器（CR*RecipeGen）+ CRRecipeProvider（烧制/合成）
-  mixin/                        # 5 个 mixin（见 05-development.md §mixin）
+  mixin/                        # 6 个 mixin（见 05-development.md §3）
 
 src/main/resources/
   assets/rationality/           # 模型/纹理/语言文件（zh_cn 手写）

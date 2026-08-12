@@ -32,11 +32,11 @@
 | `BanRecipes` | common | 配方删除（RecipeManager.apply HEAD，见 04-recipe-ban.md） |
 | `BeltLowProcessing` | common | 让传送带识别 Headbox 为低空处理装置（`BeltInventory.getBeltProcessingAtSegment` HEAD + cancel） |
 | `AssemblyOperatorInject` | common | 让 Create 机械手（`AssemblyOperatorBlockItem.operatesOn` RETURN）可操作造纸台 |
-| `SawEnchantedBook` | common | 动力锯切割附魔书 → n 张附魔纸（`SawBlockEntity.applyRecipe` HEAD + cancel；每张一个附魔、等级恒 1） |
-| `EnchantmentMenuMixin` | common | 附魔台对原版纸：放行（`slotsChanged` 的 `isEnchantable()` @Redirect）、单附魔限制（`getEnchantmentList` 的 `is(Items.BOOK)` @Redirect）、点击时纸→附魔纸转换（`lambda$clickMenuButton$1` 的 `Item.applyEnchantments` @Redirect） |
-| `EnchantmentHelperMixin` | common | 原版纸可被附魔台所有附魔候选接受（`getAvailableEnchantmentResults` 的 `is(Items.BOOK)` @Redirect）；**附魔能力值注入**：纸无独立 Item 类，无法覆写 `getEnchantmentValue`，在两处调用点（`selectEnchantment`/`getEnchantmentCost`）redirect 返回 1（与书一致） |
+| `SawInject` | common | 动力锯切割附魔书 → 每附魔按等级出 n 张附魔纸（`SawBlockEntity.getRecipes` HEAD + cancel，动态配方 `cutting/enchanted_book`，120 tick；每张一个附魔、等级恒 1、书惩罚均摊） |
 | `BeltBlocked` | common | 传送带阻挡相关（配合成形拦截） |
 | `BeltRenderFrame` | client | 客户端渲染（造纸框/传送带渲染相关） |
+
+> 附魔台放行/转换类逻辑**已从 mixin 移除**：现在 `enchanting_paper` 是独立物品（`EnchantingPaperItem`，覆写 `getEnchantmentValue`/`supportsEnchantment`/`isEnchantable`），等级压制与累积惩罚走 `event/EnchantingHandler` 事件（见 §4 与 03 §4）。
 
 **警告**：mixins.json 配置了 `"defaultRequire": 1` —— 任何 mixin 注入失败都会**直接崩溃**。改动 Create 内部类（尤其 `BeltInventory`、`RecipeManager`、`AssemblyOperatorBlockItem` 等被注入目标）时，必须同步验证 mixin 目标方法/签名仍存在。
 
@@ -48,7 +48,7 @@
 | `event/CropGrowHandler` | `@EventBusSubscriber` | `CropGrowEvent.Pre`（DO_NOT_GROW）、`BonemealEvent`（取消）、`LevelTickEvent.Post`（每 200 刻清理） |
 | `event/EntityTickHandler` | `@EventBusSubscriber` | `EntityTickEvent.Post`：实体在黑液中施加 POISON |
 | `event/PollutionSyncHandler` | `@EventBusSubscriber` | `LevelTickEvent.Post`：每 20 刻同步玩家所在区块污染，状态变化才发包，离线玩家记录自动清理 |
-| `event/EnchantingHandler` | `@EventBusSubscriber` | `EnchantmentLevelSetEvent`：原版纸在附魔台附魔等级恒为 1（value=1 限制，**无需 mixin**） |
+| `event/EnchantingHandler` | `@EventBusSubscriber` | `EnchantmentLevelSetEvent`：`enchanting_paper` 附魔等级恒为 1、费用 1 青金石；`PlayerEnchantItemEvent`：每次附魔累加累积惩罚（`REPAIR_COST` ×2+1） |
 | `network/PollutionStatusPayload` | CustomPacketPayload | record + StreamCodec(BOOL)；在 `CreateRationality.registerNetworking` 注册 playToClient |
 | `client/PollutionIndicatorClient` | `@OnlyIn(CLIENT)` | `FMLClientSetupEvent`（`CreateRationalityClient.setup`）中注册 `ItemProperties` predicate |
 | `data/model/PollutionIndicatorModels` | 模型 datagen | 主模型（`_0` 纹理）+ override 子模型（`_1` 纹理），predicate `rationality:pollution` |
@@ -71,9 +71,9 @@
 - `FormingRecipe.getResultItem` 对"输出即输入"的配方（造纸框返还）做了特判：返回最后一个 **100% 概率**输出（跳过可能存在的概率副产）；`HeadboxBlockEntity.fillItem` 使用 `rollResults` 去首位（造纸框）——两处配合支持成形配方携带概率输出
 - `PapermakingBlockSpoutingBehaviour` 只认 FORMING 配方；Headbox 则回退原生注液（`FillingBySpout`）与 CDG 铸造（`CastingByHeadbox`）
 - 碎浆机的音效目前是临时的（`tickAudio` 有 TODO 注释，复用 MIXING 音效）
-- 碱法蒸煮副产的黑液若直接倒掉会污染区块（1 游戏日作物停长）；黑液目前**没有**回收/处理配方（如浓缩燃烧发电）——这是开放的扩展点
+- 碱法蒸煮副产的黑液若直接倒掉会污染区块（1 游戏日作物停长）；黑液目前只有 `bone_meal`（混合机：黑液 500mB + 骨头 → 骨粉 ×6）一个消耗配方，且与产出有缺口——浓缩燃烧发电等回收路径仍是开放的扩展点
 - `CRRecipeTypes` 中 `CRAFTING_PAPER_COLORING` 枚举被注释（`PaperColoring` 类存在但未注册）；`ENCHANT_PAPER_BINDING` 是第一个启用的自定义 crafting 配方（CustomRecipe，动态输出）
-- 附魔纸相关：`SawEnchantedBook` 注入 `applyRecipe` HEAD 后必须自设 `appliedRecipe/recipeDuration/remainingTime = 20` 契约；附魔纸不能直接附魔装备（非 EnchantedBookItem）；纸+纸铁砧可合并（与原版附魔书一致）；1.21 中 `DataComponents` 在 `net.minecraft.core.component` 包
+- 附魔纸相关：`SawInject` 注入 `getRecipes` HEAD 后必须自设动态配方（含 duration）；附魔纸不能直接附魔装备（非 EnchantedBookItem）；纸+纸铁砧可合并（与原版附魔书一致）；绑定配方匹配的是纸的 `ENCHANTMENTS` 组件，而锯切产物写入 `STORED_ENCHANTMENTS`——改 `SawInject`/`EnchantPaperBindingRecipe` 时注意两者组件约定（见 03 §4.1）；1.21 中 `DataComponents` 在 `net.minecraft.core.component` 包
 - 项目无 CI、无测试框架；改完核心机制建议 `runClient` 手动走一遍：碱法蒸煮 → 成形 → 压制，并验证黑液污染与指示仪
 
 ## 7. 验证清单（改完自检）

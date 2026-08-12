@@ -9,7 +9,7 @@
 |---|---|---|
 | [01-overview.md](01-overview.md) | 项目定位、技术栈、目录结构、设计理念 | 首次接触项目 |
 | [02-production-chain.md](02-production-chain.md) | 核心产线（碱法蒸煮→成形→压制）、化学品循环（石灰/碱液）、黑液污染机制 | 想理解玩法与机制 |
-| [03-recipes.md](03-recipes.md) | 配方类型、全部配方清单（含化学品与跨模组旁支）、JEI 集成 | 想改/加配方 |
+| [03-recipes.md](03-recipes.md) | 配方产线总览：按大类（造纸/化学品/附魔纸/食品/能源/联动）组织的全部配方清单、JEI 集成 | 想改/加配方 |
 | [04-recipe-ban.md](04-recipe-ban.md) | 配方禁令系统：机制与完整删除清单 | 要覆盖其他模组配方 |
 | [05-development.md](05-development.md) | 开发工作流：命令、注册/datagen/mixin/网络规则、已知注意点 | 准备写代码 |
 
@@ -36,5 +36,5 @@
 - 包根：`com.chemiofitor.create.rationality`，模组 ID：`rationality`
 - 注册一律走 CreateRegistrate（`CreateRationality.REGISTRATE`）
 - `src/generated/resources/` 为已提交的 datagen 输出，**禁止手改**
-- 项目未初始化 git 仓库；无单元测试/Lint
+- 项目为 git 仓库（main 分支）；无单元测试/Lint
 - 环境备注：Windows + Git Bash，`run/`、`build/` 等已 gitignore

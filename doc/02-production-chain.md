@@ -128,7 +128,9 @@ PollutionIndicatorClient.setPolluted → model override predicate（rationality:
 | `calcium_carbonate`（碳酸钙） | 苛化副产；可熔烧回生石灰（石灰循环） |
 | `quicklime`（生石灰） | 石灰石/碳酸钙熔烧；碱性物；水化成熟石灰、苛化用 |
 | `slaked_lime`（熟石灰） | 生石灰水化；碱性物 |
-| `fine_pulp` / `raw_paper` / `oilpaper` | 精浆团 / 粗纸 / 油纸（UNCOMMON，CDG 联动） |
+| `fine_pulp` / `raw_paper` | 精浆团 / 粗纸（普通物品） |
+| `oilpaper` | 油纸（UNCOMMON，CDG 联动） |
+| `enchanting_paper` | 附魔纸（UNCOMMON，`EnchantingPaperItem`，可直接附魔；见 03 §4） |
 | `pollution_indicator`（污染指示仪） | 双材质状态显示（见 §4） |
 | `color_paper` | 15 种彩色纸（染料色**除白色**），`ColorPaperItem`，`rationality:color_paper` 标签 |
 
@@ -142,6 +144,8 @@ PollutionIndicatorClient.setPolluted → model override predicate（rationality:
 | Ash Lye（灰汁） | 2000/1100 | 灰 | 草木灰浸出，`ash_lye` 标签 |
 | Caustic Potash Lye（钾碱液） | 2000/1100 | 灰 | 苛化产物，`lye` 标签，translucent 渲染 |
 | Black Liquor（黑液） | 2000/1100 | 黑 | 碱法蒸煮副产；**污染源**，`BlackLiquorBlock` |
+| Glycerol（甘油） | 1100/2000 | 橙 | 生物柴油副产（CDG 联动），暂无下游用途 |
+| Yeast Liquid / Raw Yeast Liquid | 2000/1200 | 陶土白 / 陶土棕 | 酵母液体，已注册**暂无配方**（预留） |
 
 全部流体带桶 + 发射器行为；灰汁/钾碱液用 translucent 渲染。
 
@@ -153,4 +157,5 @@ PollutionIndicatorClient.setPolluted → model override predicate（rationality:
 | `rationality:alkaline` | 碱性物（草木灰/生石灰/熟石灰 + datagen 补充骨粉） |
 | `rationality:oil_pressing_raw_material` / `sugar_raw_material` | 油料 / 糖原料（跨模组） |
 | `rationality:color_paper` | 彩色纸 |
-| 流体：`pulp`/`fine_pulp`/`syrup`/`ash_lye`/`black_liquor`/`lye`、`c:plantoil` | 流体分类 |
+| `c:dusts/wood` / `c:buckets` | 木屑（预留）/ 流体桶（Pulp、Fine Pulp 桶） |
+| 流体：`pulp`/`fine_pulp`/`syrup`/`ash_lye`/`black_liquor`/`lye`/`glycerol`/`yeast_liquid`/`raw_yeast_liquid`、`c:plantoil`/`c:ethanol` | 流体分类 |

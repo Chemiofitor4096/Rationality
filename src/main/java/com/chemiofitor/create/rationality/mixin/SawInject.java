@@ -48,6 +48,15 @@ public class SawInject {
             ItemStack bookStack = inventory.getStackInSlot(0);
             ItemEnchantments enchants = bookStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
 
+            // 书的累积惩罚按张数均摊到每张纸（向上取整）：书(7) 切 4 张 → 每张 2
+            int totalPapers = 0;
+            for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
+                totalPapers += entry.getIntValue();
+            }
+            int perPaperCost = totalPapers > 0
+                    ? Math.ceilDiv(bookStack.getOrDefault(DataComponents.REPAIR_COST, 0), totalPapers)
+                    : 0;
+
             // 为每个附魔生成一张纸，每张纸仅携带该附魔（等级为1），数量为原附魔等级
             List<ProcessingOutput> outputs = enchants.entrySet().stream()
                     .map(entry -> {
@@ -57,6 +66,7 @@ public class SawInject {
 
                         ItemStack paper = new ItemStack(CRItems.ENCHANTING_PAPER.get());
                         paper.set(DataComponents.STORED_ENCHANTMENTS, merged.toImmutable());
+                        paper.set(DataComponents.REPAIR_COST, perPaperCost);
                         paper.setCount(entry.getIntValue());
                         return new ProcessingOutput(paper, 1.0f);
                     })
