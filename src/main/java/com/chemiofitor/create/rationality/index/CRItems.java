@@ -1,9 +1,9 @@
 package com.chemiofitor.create.rationality.index;
 
 import com.chemiofitor.create.rationality.common.item.ColorPaperItem;
+import com.chemiofitor.create.rationality.common.item.EnchantingPaperItem;
 import com.chemiofitor.create.rationality.data.model.PollutionIndicatorModels;
 import com.tterrag.registrate.util.entry.ItemEntry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -47,6 +47,11 @@ public class CRItems {
     public static final ItemEntry<Item> RAW_PAPER = REGISTRATE.item("raw_paper", Item::new)
             .register();
 
+    public static final ItemEntry<EnchantingPaperItem> ENCHANTING_PAPER =
+            REGISTRATE.item("enchanting_paper", EnchantingPaperItem::new)
+                    .properties(prop -> prop.rarity(Rarity.UNCOMMON))
+                    .register();
+
     public static final ItemEntry<Item> OILPAPER = REGISTRATE.item("oilpaper", Item::new)
             .properties(p -> p.rarity(Rarity.UNCOMMON))
             .register();
@@ -55,16 +60,6 @@ public class CRItems {
     public static final ItemEntry<Item> POLLUTION_INDICATOR =
             REGISTRATE.item("pollution_indicator", Item::new)
                     .model(PollutionIndicatorModels::build)
-                    .register();
-
-    /**
-     * 动力锯切割附魔书也会产出（等级 1）；≥3 张 + 皮革合成附魔书。
-     */
-    public static final ItemEntry<Item> ENCHANTED_PAPER =
-            REGISTRATE.item("enchanted_paper", Item::new)
-                    .properties(p -> p.stacksTo(1))
-                    .model((ctx, prov) -> prov.generated(ctx,
-                            ResourceLocation.fromNamespaceAndPath("minecraft", "item/paper")))
                     .register();
 
     private static ItemEntry<ColorPaperItem> colorPaper(DyeColor color) {

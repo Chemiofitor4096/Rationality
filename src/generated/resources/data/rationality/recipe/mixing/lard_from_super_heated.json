@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "butchercraft"
+    }
+  ],
+  "type": "create:mixing",
+  "heat_requirement": "superheated",
+  "ingredients": [
+    {
+      "item": "butchercraft:fat"
+    }
+  ],
+  "results": [
+    {
+      "count": 3,
+      "id": "butchercraft:lard"
+    },
+    {
+      "chance": 0.5,
+      "id": "butchercraft:lard"
+    }
+  ]
+}

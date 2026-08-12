@@ -6,6 +6,7 @@ import com.chemiofitor.create.rationality.data.recipe.PulpingRecipeGen;
 import com.chemiofitor.create.rationality.index.CRFluids;
 import com.chemiofitor.create.rationality.index.CRItems;
 import com.chemiofitor.create.rationality.index.CRTagKeys;
+import com.lance5057.butchercraft.ButchercraftItems;
 import com.simibubi.create.AllTags;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import net.minecraft.core.HolderLookup;
@@ -56,6 +57,23 @@ public class CRPulpingRecipeGen extends PulpingRecipeGen {
                 .requiresHeat(HeatCondition.HEATED)
                 .output(CRFluids.SYRUP.get(), 1000));
 
+        // 屠夫乐事
+        create("ground_beef",  b ->b
+                .require(Items.BEEF)
+                .output(ButchercraftItems.GROUND_BEEF.get(), 3)
+                .whenModLoaded(RationalMods.BUTCHER_CRAFT.modid));
+
+        create("ground_porkchop",  b ->b
+                .require(Items.PORKCHOP)
+                .output(ButchercraftItems.GROUND_PORK.get(), 3)
+                .whenModLoaded(RationalMods.BUTCHER_CRAFT.modid));
+
+        create("ground_chicken",  b ->b
+                .require(Items.CHICKEN)
+                .output(ButchercraftItems.GROUND_CHICKEN.get(), 3)
+                .whenModLoaded(RationalMods.BUTCHER_CRAFT.modid));
+
+        // 农夫乐事联动
         create("minced_beef",  b ->b
                 .require(Items.BEEF)
                 .require(Items.BEEF)
@@ -63,7 +81,8 @@ public class CRPulpingRecipeGen extends PulpingRecipeGen {
                 .require(Items.BEEF)
                 .require(Fluids.WATER, 500)
                 .output(ModItems.MINCED_BEEF.get(), 10)
-                .whenModLoaded(RationalMods.FARMERS_DELIGHT.modid));
+                .whenModLoaded(RationalMods.FARMERS_DELIGHT.modid)
+                .whenModMissing(RationalMods.BUTCHER_CRAFT.modid));
 
         create("bacon",  b ->b
                 .require(Items.PORKCHOP)
@@ -72,7 +91,8 @@ public class CRPulpingRecipeGen extends PulpingRecipeGen {
                 .require(Items.PORKCHOP)
                 .require(Fluids.WATER, 500)
                 .output(ModItems.BACON.get(), 10)
-                .whenModLoaded(RationalMods.FARMERS_DELIGHT.modid));
+                .whenModLoaded(RationalMods.FARMERS_DELIGHT.modid)
+                .whenModMissing(RationalMods.BUTCHER_CRAFT.modid));
 
         create("chicken_cuts",  b ->b
                 .require(Items.CHICKEN)
@@ -81,8 +101,10 @@ public class CRPulpingRecipeGen extends PulpingRecipeGen {
                 .require(Items.CHICKEN)
                 .require(Fluids.WATER, 500)
                 .output(ModItems.CHICKEN_CUTS.get(), 10)
-                .whenModLoaded(RationalMods.FARMERS_DELIGHT.modid));
+                .whenModLoaded(RationalMods.FARMERS_DELIGHT.modid)
+                .whenModMissing(RationalMods.BUTCHER_CRAFT.modid));
 
+        // 原版
         create("clay_ball", b -> b
                 .require(Items.CLAY)
                 .output(Items.CLAY_BALL, 4));

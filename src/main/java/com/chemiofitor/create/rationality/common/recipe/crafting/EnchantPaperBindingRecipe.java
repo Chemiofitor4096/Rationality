@@ -1,5 +1,6 @@
 package com.chemiofitor.create.rationality.common.recipe.crafting;
 
+import com.chemiofitor.create.rationality.common.item.EnchantingPaperItem;
 import com.chemiofitor.create.rationality.index.CRItems;
 import com.chemiofitor.create.rationality.index.CRRecipeTypes;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -13,19 +14,11 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * 附魔纸绑定配方：≥3 张附魔纸 + 1 皮革 → 附魔书。
- * <p>
- * 附魔书继承所有附魔纸的附魔总和（铁砧式合并）：
- * - 同名附魔等级相加，不超过 {@link Enchantment#getMaxLevel()}
- * - 互斥附魔（exclusiveSet）按输入顺序保留先出现的，跳过冲突项
- * <p>
- * 动态输出配方，CustomRecipe 的 isSpecial 默认 true，JEI 不展示具体输出。
- */
 public class EnchantPaperBindingRecipe extends CustomRecipe {
     public EnchantPaperBindingRecipe(CraftingBookCategory category) {
         super(category);
@@ -33,21 +26,25 @@ public class EnchantPaperBindingRecipe extends CustomRecipe {
 
     @Override
     public boolean matches(CraftingInput input, Level level) {
+        boolean hasEnchant = false;
         int papers = 0;
         int leathers = 0;
         for (int i = 0; i < input.size(); i++) {
             ItemStack stack = input.getItem(i);
             if (stack.isEmpty())
                 continue;
-            if (stack.is(CRItems.ENCHANTED_PAPER.get())) {
+            if (stack.getItem() instanceof EnchantingPaperItem) {
                 papers++;
+                if (stack.has(DataComponents.ENCHANTMENTS)){
+                    hasEnchant = true;
+                }
             } else if (stack.is(Items.LEATHER)) {
                 leathers++;
             } else {
                 return false;
             }
         }
-        return papers >= 3 && leathers == 1;
+        return papers >= 3 && leathers == 1 && hasEnchant;
     }
 
     @Override
@@ -56,30 +53,21 @@ public class EnchantPaperBindingRecipe extends CustomRecipe {
 
         for (int i = 0; i < input.size(); i++) {
             ItemStack stack = input.getItem(i);
-            if (!stack.is(CRItems.ENCHANTED_PAPER.get()))
+            if (!(stack.getItem() instanceof EnchantingPaperItem))
                 continue;
 
             ItemEnchantments enchants = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
             for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
                 Holder<Enchantment> holder = entry.getKey();
-                int level = entry.getIntValue();
-
-                // 互斥附魔按输入顺序保留先出现的，跳过冲突项
-                boolean conflicts = merged.keySet().stream()
-                        .anyMatch(e -> e.value().exclusiveSet().contains(holder));
-                if (conflicts)
-                    continue;
-
-                int existing = merged.getLevel(holder);
-                int target = existing == 0
-                        ? level
-                        : Math.min(existing + level, holder.value().getMaxLevel());
-                merged.set(holder, target);
+                int level = entry.getIntValue() + merged.getLevel(holder);
+                level = Math.min(holder.value().getMaxLevel(), level);
+                merged.set(holder, level);
             }
         }
 
         ItemStack book = new ItemStack(Items.ENCHANTED_BOOK);
-        book.set(DataComponents.ENCHANTMENTS, merged.toImmutable());
+        book.set(DataComponents.STORED_ENCHANTMENTS, merged.toImmutable());
+        book.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
         return book;
     }
 

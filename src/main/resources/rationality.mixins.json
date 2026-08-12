@@ -6,7 +6,8 @@
 		"AssemblyOperatorInject",
 		"BanRecipes",
 		"BeltBlocked",
-		"BeltLowProcessing"
+		"BeltLowProcessing",
+		"SawInject"
 	],
 	"injectors": {
 		"defaultRequire": 1

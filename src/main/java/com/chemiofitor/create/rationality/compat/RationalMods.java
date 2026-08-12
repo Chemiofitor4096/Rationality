@@ -11,6 +11,7 @@ public enum RationalMods {
 
     FARMERS_DELIGHT("farmersdelight"),
     CORN_DELIGHT("corn_delight"),
+    BUTCHER_CRAFT("butchercraft")
     ;
     public final String modid;
     public final boolean isLoaded;

@@ -1,0 +1,31 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "createdieselgenerators"
+    }
+  ],
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "type": "neoforge:tag",
+      "amount": 100,
+      "tag": "c:plantoil"
+    },
+    {
+      "type": "neoforge:tag",
+      "amount": 200,
+      "tag": "c:ethanol"
+    }
+  ],
+  "results": [
+    {
+      "amount": 200,
+      "id": "createdieselgenerators:biodiesel"
+    },
+    {
+      "amount": 100,
+      "id": "rationality:glycerol"
+    }
+  ]
+}

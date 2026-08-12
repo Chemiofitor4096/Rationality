@@ -130,6 +130,15 @@ public class CRRecipeProvider extends RecipeProvider {
                 .define('A', Items.REDSTONE)
                 .unlockedBy("has_zinc", RegistrateRecipeProvider.has(AllItems.ZINC_INGOT))
                 .save(output, location("crafting/pollution_indicator"));
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, CRItems.ENCHANTING_PAPER.get())
+                .pattern("XXX")
+                .pattern("XAX")
+                .pattern("XXX")
+                .define('X', AllItems.EXP_NUGGET)
+                .define('A', Items.PAPER)
+                .unlockedBy("has_exp_nugget", RegistrateRecipeProvider.has(AllItems.EXP_NUGGET))
+                .save(output, location("crafting/enchanting_paper"));
     }
 
     private void colorPaper(RecipeOutput output, ColorPaperItem colorPaper) {

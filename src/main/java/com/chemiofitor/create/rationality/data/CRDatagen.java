@@ -72,6 +72,8 @@ public class CRDatagen {
                                         .add(Items.SUGAR_CANE)
                                         .add(Items.BEETROOT)
                                         .add(Items.APPLE)
+                                        .add(Items.SWEET_BERRIES)
+                                        .add(Items.CHORUS_FRUIT)
                                         .addOptional(cn.mcmod.corn_delight.item.ItemRegistry.CORN.getId());
 
                         provider.addTag(AllTags.AllItemTags.PULPIFIABLE.tag)

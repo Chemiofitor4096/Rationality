@@ -3,6 +3,8 @@
     "minecraft:sugar_cane",
     "minecraft:beetroot",
     "minecraft:apple",
+    "minecraft:sweet_berries",
+    "minecraft:chorus_fruit",
     {
       "id": "corn_delight:corn",
       "required": false

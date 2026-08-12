@@ -139,6 +139,66 @@ public class CRFluids {
                     .build()
                     .register();
 
+    public static final FluidEntry<BaseFlowingFluid.Flowing> GLYCEROL =
+            REGISTRATE.fluid("glycerol", CreateRationality.asResource("block/glycerol_still"),
+                            CreateRationality.asResource("block/glycerol_flow"), CreateRegistrate::defaultFluidType)
+                    .lang("Glycerol")
+                    .tag(CRTagKeys.Fluids.GLYCEROL)
+                    .properties(b -> b.viscosity(1100)
+                            .density(2000))
+                    .fluidProperties(p -> p.levelDecreasePerBlock(3)
+                            .tickRate(40)
+                            .slopeFindDistance(3)
+                            .explosionResistance(100f))
+                    .source(BaseFlowingFluid.Source::new)
+                    .block()
+                    .properties(p -> p.mapColor(MapColor.COLOR_ORANGE))
+                    .build()
+                    .bucket()
+                    .onRegister(CRFluids::registerFluidDispenseBehavior)
+                    .build()
+                    .register();
+
+    public static final FluidEntry<BaseFlowingFluid.Flowing> YEAST_LIQUID =
+            REGISTRATE.fluid("yeast_liquid", CreateRationality.asResource("block/yeast_liquid_still"),
+                            CreateRationality.asResource("block/yeast_liquid_flow"), CreateRegistrate::defaultFluidType)
+                    .lang("Yeast Liquid")
+                    .tag(CRTagKeys.Fluids.YEAST_LIQUID)
+                    .properties(b -> b.viscosity(2000)
+                            .density(1200))
+                    .fluidProperties(p -> p.levelDecreasePerBlock(3)
+                            .tickRate(20)
+                            .slopeFindDistance(3)
+                            .explosionResistance(100f))
+                    .source(BaseFlowingFluid.Source::new)
+                    .block()
+                    .properties(p -> p.mapColor(MapColor.TERRACOTTA_WHITE))
+                    .build()
+                    .bucket()
+                    .onRegister(CRFluids::registerFluidDispenseBehavior)
+                    .build()
+                    .register();
+
+    public static final FluidEntry<BaseFlowingFluid.Flowing> RAW_YEAST_LIQUID =
+            REGISTRATE.fluid("raw_yeast_liquid", CreateRationality.asResource("block/raw_yeast_liquid_still"),
+                            CreateRationality.asResource("block/raw_yeast_liquid_flow"), CreateRegistrate::defaultFluidType)
+                    .lang("Raw Yeast Liquid")
+                    .tag(CRTagKeys.Fluids.RAW_YEAST_LIQUID)
+                    .properties(b -> b.viscosity(2000)
+                            .density(1200))
+                    .fluidProperties(p -> p.levelDecreasePerBlock(3)
+                            .tickRate(20)
+                            .slopeFindDistance(3)
+                            .explosionResistance(100f))
+                    .source(BaseFlowingFluid.Source::new)
+                    .block()
+                    .properties(p -> p.mapColor(MapColor.TERRACOTTA_BROWN))
+                    .build()
+                    .bucket()
+                    .onRegister(CRFluids::registerFluidDispenseBehavior)
+                    .build()
+                    .register();
+
     public static final FluidEntry<BaseFlowingFluid.Flowing> SYRUP =
             REGISTRATE.fluid("syrup", CreateRationality.asResource("block/syrup_still"),
                             CreateRationality.asResource("block/syrup_flow"), CreateRegistrate::defaultFluidType)

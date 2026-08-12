@@ -39,6 +39,9 @@ public class RecipeTargets {
         // plant oil
         add("createdieselgenerators", "compacting/plant_oil");
 
+        // biodiesel
+        add("createdieselgenerators", "mixing/biodiesel");
+
         // corn -> paper
         add("corn_delight", "paper_from_corncob");
 

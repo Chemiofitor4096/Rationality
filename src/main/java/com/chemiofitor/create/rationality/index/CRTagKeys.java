@@ -36,14 +36,18 @@ public class CRTagKeys {
 
     public static final class Fluids {
         public static final TagKey<Fluid> PLANTOIL = create("c", "plantoil");
+        public static final TagKey<Fluid> ETHANOL = create("c", "ethanol");
 
         public static final TagKey<Fluid> PULP = create("rationality", "pulp");
         public static final TagKey<Fluid> FINE_PULP = create("rationality", "fine_pulp");
         public static final TagKey<Fluid> SYRUP = create("rationality", "syrup");
         public static final TagKey<Fluid> ASH_LYE = create("rationality", "ash_lye");
         public static final TagKey<Fluid> BLACK_LIQUOR = create("rationality", "black_liquor");
-
         public static final TagKey<Fluid> LYE = create("rationality", "lye");
+        public static final TagKey<Fluid> GLYCEROL = create("rationality", "glycerol");
+        public static final TagKey<Fluid> YEAST_LIQUID = create("rationality", "yeast_liquid");
+        public static final TagKey<Fluid> RAW_YEAST_LIQUID = create("rationality", "raw_yeast_liquid");
+
 
         private static TagKey<Fluid> create(String namespace, String id) {
             return TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(namespace, id));
