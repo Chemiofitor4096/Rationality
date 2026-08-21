@@ -2,7 +2,9 @@ package com.chemiofitor.create.rationality.index;
 
 import com.chemiofitor.create.rationality.common.item.ColorPaperItem;
 import com.chemiofitor.create.rationality.common.item.EnchantingPaperItem;
+import com.chemiofitor.create.rationality.common.item.FuelItem;
 import com.chemiofitor.create.rationality.data.model.PollutionIndicatorModels;
+import com.simibubi.create.AllTags;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -28,6 +30,10 @@ public class CRItems {
             .register();
 
     public static final ItemEntry<Item> COAL_ASH = REGISTRATE.item("coal_ash", Item::new)
+            .register();
+
+    public static final ItemEntry<FuelItem> CRUSHED_COAL_GANGUE = REGISTRATE.item("crushed_coal_gangue", FuelItem::new)
+            .tag(AllTags.AllItemTags.CRUSHED_RAW_MATERIALS.tag)
             .register();
 
     public static final ItemEntry<Item> CALCIUM_CARBONATE = REGISTRATE.item("calcium_carbonate", Item::new)

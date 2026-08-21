@@ -1,9 +1,9 @@
 {
   "values": [
+    "rationality:coal_gangue",
     "rationality:mechanical_pulper",
     "rationality:headbox",
     "rationality:papermaking_frame",
-    "rationality:papermaking_depot",
-    "rationality:crystallizing_basin"
+    "rationality:papermaking_depot"
   ]
 }

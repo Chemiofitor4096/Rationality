@@ -14,9 +14,12 @@ import net.minecraft.world.item.DispensibleContainerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.material.MapColor;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.fluids.BaseFlowingFluid;
+import net.neoforged.neoforge.fluids.FluidInteractionRegistry;
 import org.jetbrains.annotations.NotNull;
 
 import static com.chemiofitor.create.rationality.CreateRationality.REGISTRATE;
@@ -139,6 +142,31 @@ public class CRFluids {
                     .build()
                     .register();
 
+    /**
+     * 浓缩黑液：黑液浓缩（蒸发水分）后的安全形态。
+     * 与黑液不同，使用普通 LiquidBlock（非 BlackLiquorBlock），因此接触环境不会产生区块污染——
+     * 这是"资源化后污染消除"闭环的核心：玩家投入设备浓缩处理，即可避免污染。
+     */
+    public static final FluidEntry<BaseFlowingFluid.Flowing> CONCENTRATED_BLACK_LIQUOR =
+            REGISTRATE.fluid("concentrated_black_liquor", CreateRationality.asResource("block/concentrated_black_liquor_still"),
+                            CreateRationality.asResource("block/concentrated_black_liquor_flow"), CreateRegistrate::defaultFluidType)
+                    .lang("Concentrated Black Liquor")
+                    .tag(CRTagKeys.Fluids.CONCENTRATED_BLACK_LIQUOR)
+                    .properties(b -> b.viscosity(3000)
+                            .density(1400))
+                    .fluidProperties(p -> p.levelDecreasePerBlock(2)
+                            .tickRate(40)
+                            .slopeFindDistance(3)
+                            .explosionResistance(100f))
+                    .source(BaseFlowingFluid.Source::new)
+                    .block()
+                    .properties(p -> p.mapColor(MapColor.COLOR_BLACK))
+                    .build()
+                    .bucket()
+                    .onRegister(CRFluids::registerFluidDispenseBehavior)
+                    .build()
+                    .register();
+
     public static final FluidEntry<BaseFlowingFluid.Flowing> GLYCEROL =
             REGISTRATE.fluid("glycerol", CreateRationality.asResource("block/glycerol_still"),
                             CreateRationality.asResource("block/glycerol_flow"), CreateRegistrate::defaultFluidType)
@@ -220,6 +248,18 @@ public class CRFluids {
                     .register();
 
     public static void register() {}
+
+    public static void registerFluidInteractions() {
+        FluidInteractionRegistry.addInteraction(NeoForgeMod.LAVA_TYPE.value(), new FluidInteractionRegistry.InteractionInformation(
+                BLACK_LIQUOR.get().getFluidType(),
+                fluidState -> {
+                    if (fluidState.isSource())
+                        return Blocks.OBSIDIAN.defaultBlockState();
+                    else
+                        return CRBlocks.COAL_GANGUE.get().defaultBlockState();
+                }
+        ));
+    }
 
     private static void registerFluidDispenseBehavior(BucketItem bucket) {
         DispenserBlock.registerBehavior(bucket, DISPENSE_FLUID);

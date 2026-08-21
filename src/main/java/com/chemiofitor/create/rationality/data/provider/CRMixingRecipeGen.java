@@ -44,9 +44,24 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
                 .output(CRFluids.LYE.get(), 500));
 
         create("bone_meal", b -> b
-                .require(CRTagKeys.Fluids.BLACK_LIQUOR, 500)
+                .require(CRTagKeys.Fluids.BLACK_LIQUOR, 250)
                 .require(Items.BONE)
                 .output(Items.BONE_MEAL, 6));
+
+        // ── 黑液回收闭环（F1）──────────────────────────────────────────────
+        // 浓缩：黑液 + 加热 → 蒸发水分 → 浓缩黑液（安全形态，不再产生污染）
+        create("concentrate_black_liquor", b -> b
+                .require(CRTagKeys.Fluids.BLACK_LIQUOR, 250)
+                .requiresHeat(HeatCondition.HEATED)
+                .output(CRFluids.CONCENTRATED_BLACK_LIQUOR.get(), 100));
+
+        // 苛化回碱：浓缩黑液 + 生石灰 → 碱液（量守恒 1:1）+ 碳酸钙（碳酸钙熔烧回生石灰，维持石灰循环）
+        // 浓缩后体积不虚增：浓缩 250→100、苛化 100→100；回补率见 06 F1（10%）。
+        create("lye_from_concentrated_black_liquor", b -> b
+                .require(CRTagKeys.Fluids.CONCENTRATED_BLACK_LIQUOR, 100)
+                .require(CRItems.QUICKLIME)
+                .output(CRFluids.LYE.get(), 100)
+                .output(CRItems.CALCIUM_CARBONATE));
 
         // 柴油动力
         create("oilpaper", b -> b.output(CRItems.OILPAPER)

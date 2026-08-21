@@ -45,3 +45,10 @@ RecipeManager.apply(Map<ResourceLocation, JsonElement>)
 
 - 游戏日志搜 `"Rationality trys to remove"` / `"Remove recipe"` 可确认禁令是否生效
 - 若目标模组更新后配方路径变化，删除会静默失效（只影响该配方，不崩溃）——改模组版本后建议核对清单
+
+## 5. 清单核对与维护
+
+- **改清单**：只改 `data/recipe/ban/RecipeTargets.java`（静态硬编码），**不要**在本文档之外另记一份
+- **核对路径**：删除项路径必须与目标模组数据包内的实际路径一致——可在游戏内按 F3+H 查 JEI 配方 id，或解压目标模组 jar 对照 `data/<modid>/recipe/`
+- **核对时机**：升级任一被禁模组后跑一次游戏看日志；改完本文档表格后与 `RecipeTargets` 逐条比对
+- **规则提醒**：只有"同模组/同输入替换"类删除才需要登记；单纯新增新产物配方不需要

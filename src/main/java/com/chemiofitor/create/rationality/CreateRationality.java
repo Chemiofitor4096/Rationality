@@ -2,6 +2,7 @@ package com.chemiofitor.create.rationality;
 
 import com.chemiofitor.create.rationality.client.PollutionIndicatorClient;
 import com.chemiofitor.create.rationality.common.block.entity.HeadboxBlockEntity;
+import com.chemiofitor.create.rationality.common.block.entity.PapermakingDepotBlockEntity;
 import com.chemiofitor.create.rationality.data.CRDatagen;
 import com.chemiofitor.create.rationality.index.*;
 import com.chemiofitor.create.rationality.network.PollutionStatusPayload;
@@ -42,6 +43,7 @@ public class CreateRationality {
         CRFluids.register();
         CRItems.register();
         CRRecipeTypes.register(modEventBus);
+        CRArmInteractionPointTypes.register(modEventBus);
 
         CRMoldType.register();
 
@@ -57,10 +59,14 @@ public class CreateRationality {
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         HeadboxBlockEntity.registerCapabilities(event);
+        PapermakingDepotBlockEntity.registerCapabilities(event);
     }
 
     public static void init(final FMLCommonSetupEvent event) {
+        CRFluids.registerFluidInteractions();
+
         event.enqueueWork(CRBlockSpoutingBehaviours::registerDefaults);
+
     }
 
     /**

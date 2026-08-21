@@ -1,0 +1,13 @@
+{
+  "type": "create:crushing",
+  "ingredients": [
+    {
+      "item": "rationality:coal_gangue"
+    }
+  ],
+  "results": [
+    {
+      "id": "rationality:crushed_coal_gangue"
+    }
+  ]
+}

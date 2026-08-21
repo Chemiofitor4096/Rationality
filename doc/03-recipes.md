@@ -9,7 +9,7 @@
 | 大类 | 核心产物                                           | 主要机器 | 依赖模组 |
 |---|----------------------------------------------------|---|---|
 | **A 造纸主线** | 纸、粗纸、纸板（+ 湿浆/精浆流体）                  | 机械碎浆机+盆、Headbox/造纸台+注液口、压片机、压实机 | 无（本体） |
-| **B 化学品与碱回收** | 灰汁、碱液、生石灰、熟石灰、碳酸钙、骨粉           | 混合机、鼓风炉、熔炉 | 无 |
+| **B 化学品与碱回收** | 灰汁、碱液、生石灰、熟石灰、碳酸钙、骨粉、浓缩黑液回收 | 混合机、鼓风炉、熔炉 | 无 |
 | **C 附魔纸循环** | 附魔纸（enchanting_paper）、附魔书                 | 附魔台、动力锯、工作台 | 无 |
 | **D 食品与甜食** | Syrup、焦糖、炸油、肉制品、猪油、肥皂              | 碎浆机、混合机、注液口 | FD / Butchercraft / Bitterballen / Confectionery / Corn Delight |
 | **E 能源与油料** | 植物油、乙醇、生物柴油、甘油、油纸、巧克力棒铸造   | 压实机、混合机、发酵机、铸造台 | CDG（+Confectionery） |
@@ -22,7 +22,7 @@
    │碱法蒸煮        │湿浆压实                │（纸板）
    └──► 黑液(污染)  └──► 纸板           ┌──► 粗纸（中间物）
                         └──► 湿浆 ────┘
-草木灰/石灰石/煤炭 ──烧制──► 草木灰/生石灰/炭灰 ──► 灰汁 ──苛化──► 钾碱液 + 碳酸钙 ──► 生石灰（循环）
+草木灰/石灰石/煤炭 ──烧制──► 草木灰/生石灰/炭灰 ──► 灰汁 ──苛化──► 碱液 + 碳酸钙 ──► 生石灰（循环）
 ```
 
 ## 1. 配方类型（`index/CRRecipeTypes.java`）
@@ -45,7 +45,10 @@
 |---|---|---|---|
 | `pulp_from_pulpifiable` | `create:pulpifiable` ×4 + 水 1000mB | Pulp **500mB** | 常温简单制浆，产量减半 |
 | `pulp_from_pulpifiable_with_heat` | `create:pulpifiable` ×4 + `rationality:alkaline` ×2 + 水 1000mB + **加热** | Pulp 1000mB + **黑液 250mB** | 碱法蒸煮，主推路径 |
+| `pulp_from_pulpifiable_with_heat_and_lye` ⚠ | `create:pulpifiable` ×4 + **碱液 1000mB** + 加热 | Pulp 1000mB + 黑液 250mB | ⚠WIP 未提交；碱液路径（R2 互换已修复） |
+| `pulp_from_pulpifiable_with_heat_and_ash_lye` ⚠ | `create:pulpifiable` ×4 + **灰汁 1500mB** + 加热 | Pulp 1000mB + 黑液 250mB | ⚠WIP 未提交；灰汁路径（R2 互换已修复） |
 | `fine_pulp_from_pulp` | 生石灰 ×2 + Pulp 1000mB | Fine Pulp 1000mB | 精浆（生石灰充当碱源） |
+| `fine_pulp_from_pulp_from_lye` ⚠ | **碱液 250mB** + Pulp 1000mB | Fine Pulp 1000mB | ⚠WIP 未提交；命名略绕（`from_pulp_from_lye`），见 06-roadmap.md R2 遗留 |
 | `syrup` | `rationality:sugar_raw_material` ×4 + 水 1000mB + 加热 | Syrup 1000mB | 糖浆（D 类原料） |
 
 > 碱法蒸煮是产线主推：足量制浆但副产黑液（污染源，见 02 §4 与 03 §3.3）；常温配方仅作低产应急。
@@ -93,10 +96,10 @@
 |---|---|---|
 | `ash_lye` | 草木灰 ×4 + 水 1000mB | 灰汁 1000mB |
 | `slaked_lime` | 生石灰 + 水 100mB | 熟石灰 |
-| `calcium_carbonate`（苛化） | 生石灰 + 灰汁 500mB | 碳酸钙 + **钾碱液 500mB** |
-| `bone_meal` | **黑液 500mB** + 骨头 | 骨粉 ×6 |
+| `calcium_carbonate`（苛化） | 生石灰 + 灰汁 500mB | 碳酸钙 + **碱液 500mB** |
+| `bone_meal` | **黑液 250mB** + 骨头 | 骨粉 ×6 |
 
-> `bone_meal` 是黑液目前**唯一**的消耗/处理配方（混合机）——黑液除了污染环境之外多了一条回收出口，但需玩家主动投入。
+> `bone_meal` 是黑液的**零设备低门槛**处理出口（混合机）——不回收碱，但能在无设备时处置黑液；要回收化学碱走 3.3 回收闭环。
 
 ### 3.2 石灰循环（熔烧/烧制，`CRRecipeProvider.buildRecipes`）
 
@@ -109,14 +112,22 @@
 
 ```
 ■ 碱回收闭环：
-草木灰 ──浸出──► 灰汁 ──苛化(+生石灰)──► 钾碱液（强碱，lye 标签） + 碳酸钙
+草木灰 ──浸出──► 灰汁 ──苛化(+生石灰)──► 碱液（强碱，lye 标签） + 碳酸钙
 碳酸钙 ──熔烧──► 生石灰 ──水化──► 熟石灰（碱性物，参与碱法蒸煮）
 生石灰 ──苛化消耗──┘（循环复用；石灰石熔烧可补充）
 ```
 
-### 3.3 黑液处理现状
+### 3.3 黑液回收闭环（F1，`CRMixingRecipeGen`，混合机）
 
-黑液产出（碱法蒸煮 250mB/次）与消耗（`bone_meal` 500mB/次）之间存在缺口；倒弃会污染区块（1 游戏日，见 02 §4）。暂无浓缩/燃烧发电类回收配方——这是开放的扩展点。
+黑液是碱法蒸煮副产（250mB/次）、也是**污染源**（倒弃污染区块 1 游戏日，见 02 §4）。回收把"污染是错位的资源"落地：**浓缩 → 苛化回碱**，浓缩黑液为**安全形态**（普通 `LiquidBlock`，不产生污染）；苛化**量守恒**（浓缩 250→100、苛化 100→100，体积不虚增）：
+
+| 配方 id | 输入 | 输出 | 说明 |
+|---|---|---|---|
+| `concentrate_black_liquor` | 黑液 250mB + **加热** | **浓缩黑液 100mB** | 蒸发水，浓缩 2.5×；浓缩液无污染 |
+| `lye_from_concentrated_black_liquor` | 浓缩黑液 100mB + 生石灰 | **碱液 100mB** + 碳酸钙 ×1 | 苛化回碱（量守恒 1:1）；碳酸钙熔烧回生石灰，维持石灰循环 |
+| `bone_meal`（低门槛） | 黑液 250mB + 骨头 | 骨粉 ×6 | 零设备，碱不回补 |
+
+> **回报率**（以一次碱液版蒸煮碱入 1000mB 为基准）：苛化回补 **10%**（量守恒下浓缩/苛化均不虚增，其余碱并入损失），骨粉 **0%**；碱损失永不归零，草木灰仍是最终碱源——详见 06 F1。
 
 ---
 
@@ -193,7 +204,7 @@ Syrup ──► 焦糖（5.2：Confectionery 混合 / Cannons 熔炼）
 |---|---|---|---|
 | `lard_from_heated` | 肥肉 + 加热 | 猪油 ×2 | Butchercraft |
 | `lard_from_super_heated` | 肥肉 + **超高温** | 猪油 ×3 + **50%** 猪油 ×1 | Butchercraft |
-| `soap` | 猪油 + 花（`minecraft:flowers`）+ 钾碱液 100mB | 肥皂 | Butchercraft（把 B 类钾碱液接进生活用品） |
+| `soap` | 猪油 + 花（`minecraft:flowers`）+ 碱液 100mB | 肥皂 | Butchercraft（把 B 类碱液接进生活用品） |
 
 ---
 
@@ -277,6 +288,7 @@ Syrup ──► 乙醇（发酵）──► 生物柴油原料
 1. 配方改在 `data/provider/`，**不要**手改 `src/generated/resources/`
 2. 跨模组配方必须 `whenModLoaded(...)`；模组互斥场景（如 FD/Butchercraft 绞肉）用 `whenModMissing(...)` 配对
 3. 新配方若与其他模组已有配方冲突，先到 `RecipeTargets` 登记删除（见 04-recipe-ban.md）
-4. 改完跑 `./gradlew runData` 重新生成
+4. 改完跑 `./gradlew runData` 重新生成，并核对本表与生成物逐条一致
 5. 新增物品/流体记得同步 `zh_cn.json`（手写）——en_us 由 datagen 生成
 6. 附魔纸/附魔书逻辑在 `EnchantPaperBindingRecipe` + `SawInject` + `EnchantingHandler` 三处，改动时注意三者对 `ENCHANTMENTS` / `STORED_ENCHANTMENTS` / `REPAIR_COST` 组件的约定一致（见 §4.1）
+7. **配方 id 命名与输入语义保持一致**（如用灰汁就写 `ash_lye`、用碱液就写 `lye`）——此前 WIP 中 `with_heat_and_lye`/`with_heat_and_ash_lye` 的输入互换已修复（R2），后续新增配方时注意

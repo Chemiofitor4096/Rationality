@@ -160,6 +160,7 @@ public class CRRecipeProvider extends RecipeProvider {
         GENERATORS.add(new CRBulkFermentingRecipeGen(output, registries));
         GENERATORS.add(new CRColoringRecipeGen(output, registries));
         GENERATORS.add(new CRCompactingRecipeGen(output, registries));
+        GENERATORS.add(new CRCrushingRecipeGen(output, registries));
         GENERATORS.add(new CRCuttingRecipeGen(output, registries));
         GENERATORS.add(new CRFillingRecipeGen(output, registries));
         GENERATORS.add(new CRFormingRecipeGen(output, registries));

@@ -42,9 +42,34 @@ public class CRPulpingRecipeGen extends PulpingRecipeGen {
                 .output(CRFluids.PULP.get(), 1000)
                 .output(CRFluids.BLACK_LIQUOR.get(), 250));
 
+        create("pulp_from_pulpifiable_with_heat_and_lye", b -> b
+                .require(AllTags.AllItemTags.PULPIFIABLE.tag)
+                .require(AllTags.AllItemTags.PULPIFIABLE.tag)
+                .require(AllTags.AllItemTags.PULPIFIABLE.tag)
+                .require(AllTags.AllItemTags.PULPIFIABLE.tag)
+                .require(CRTagKeys.Fluids.LYE, 1000)
+                .requiresHeat(HeatCondition.HEATED)
+                .output(CRFluids.PULP.get(), 1000)
+                .output(CRFluids.BLACK_LIQUOR.get(), 250));
+
+        create("pulp_from_pulpifiable_with_heat_and_ash_lye", b -> b
+                .require(AllTags.AllItemTags.PULPIFIABLE.tag)
+                .require(AllTags.AllItemTags.PULPIFIABLE.tag)
+                .require(AllTags.AllItemTags.PULPIFIABLE.tag)
+                .require(AllTags.AllItemTags.PULPIFIABLE.tag)
+                .require(CRTagKeys.Fluids.ASH_LYE, 1500)
+                .requiresHeat(HeatCondition.HEATED)
+                .output(CRFluids.PULP.get(), 1000)
+                .output(CRFluids.BLACK_LIQUOR.get(), 250));
+
         create("fine_pulp_from_pulp", b -> b
                 .require(CRItems.QUICKLIME)
                 .require(CRItems.QUICKLIME)
+                .require(CRFluids.PULP.get(), 1000)
+                .output(CRFluids.FINE_PULP.get(), 1000));
+
+        create("fine_pulp_from_pulp_from_lye", b -> b
+                .require(CRTagKeys.Fluids.LYE, 250)
                 .require(CRFluids.PULP.get(), 1000)
                 .output(CRFluids.FINE_PULP.get(), 1000));
 

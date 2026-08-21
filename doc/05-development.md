@@ -12,18 +12,19 @@
 ./gradlew runGameTestServer  # 运行游戏测试（当前无测试用例）
 ```
 
-- 依赖版本全部集中在 `gradle.properties`（Create 6.0.10-280、NeoForge 21.1.230、JEI 19.27.0.340 等），**不要**在 build.gradle 硬编码
+- 依赖版本全部集中在 `gradle.properties`（Create 6.0.10-280、NeoForge 21.1.233、JEI 19.27.0.340 等），**不要**在 build.gradle 硬编码
 - 运行目录 `run/`（含下载的依赖模组）已 gitignore
 - 调试 mixin 可加 JVM 参数 `-Dmixin.debug.export=true`
 
 ## 2. 新增内容的标准流程
 
 1. **注册**：在 `index/` 对应索引类加 `REGISTRATE.xxx("id", ...)` 条目（静态字段 + 末尾 `.register()`）；新索引类需在 `CreateRationality` 构造函数里调用其 `register()`
-2. **配方**：在 `data/recipe/` 继承对应的抽象生成器（如 `PulpingRecipeGen`），在 `data/provider/CRXxxRecipeGen` 里 `create(...)`；依赖模组的配方必须 `whenModLoaded(...)`；烧制/合成类配方放 `CRRecipeProvider.buildRecipes`
-3. **挂载生成器**：在 `CRDatagen.gatherData`（`CRRecipeProvider.registerAllProcessing`）注册
-4. **跑 `./gradlew runData`**，把生成结果提交（`src/generated/resources/` 是仓库的一部分，**禁止手改**）
-5. **检查禁令清单**：新配方若与旧配方冲突，在 `RecipeTargets` 登记删除（见 04-recipe-ban.md）
-6. **补中文 lang**：`src/main/resources/assets/rationality/lang/zh_cn.json`（手写维护，en_us 由 datagen 生成）
+2. **Create 内置注册表**（如机械臂交互点 `ARM_INTERACTION_POINT_TYPE`）：用 `DeferredRegister.create(CreateBuiltInRegistries.X, MODID)` 声明（见 `CRArmInteractionPointTypes`，⚠ 未提交），同样在构造函数挂 `modEventBus`
+3. **配方**：在 `data/recipe/` 继承对应的抽象生成器（如 `PulpingRecipeGen`），在 `data/provider/CRXxxRecipeGen` 里 `create(...)`；依赖模组的配方必须 `whenModLoaded(...)`；烧制/合成类配方放 `CRRecipeProvider.buildRecipes`
+4. **挂载生成器**：在 `CRDatagen.gatherData`（`CRRecipeProvider.registerAllProcessing`）注册
+5. **跑 `./gradlew runData`**，把生成结果提交（`src/generated/resources/` 是仓库的一部分，**禁止手改**；未生成的配方文件说明 runData 没跑全）
+6. **检查禁令清单**：新配方若与旧配方冲突，在 `RecipeTargets` 登记删除（见 04-recipe-ban.md）
+7. **补中文 lang**：`src/main/resources/assets/rationality/lang/zh_cn.json`（手写维护，en_us 由 datagen 生成）
 
 ## 3. Mixin（`src/main/resources/rationality.mixins.json`）
 
@@ -64,23 +65,27 @@
 - 索引类命名：`CR` + 注册表名（CRBlocks、CRItems、CRFluids、CRBlockEntityTypes、CRRecipeTypes、CRTagKeys…）
 - 语言/标签补充走 `CRDatagen.addExtraRegistrateData`（LANG + ITEM_TAGS provider）
 - 跨模组引用先查 `RationalMods` 枚举（`isLoaded`），直接引用其他模组的类时用 `whenModLoaded` 门控，避免无依赖崩溃
+- Create 的 `CreateBuiltInRegistries` 类型（机械臂交互点等）不经过 Registrate，用 `DeferredRegister` + `CreateRationality` 构造函数挂 `modEventBus`（见 §2）
 
 ## 6. 已知注意点
 
 - `HeadboxBlockEntity.registerCapabilities` 只暴露**非上方**方向的流体能力（上方留给注液口/输送）
+- `PapermakingDepotBlockEntity` 继承 Create `DepotBlockEntity`，但 **capability 不会自动继承**——需自行 `registerCapabilities` 注册 ItemHandler（⚠ 工作区已加，未提交）
 - `FormingRecipe.getResultItem` 对"输出即输入"的配方（造纸框返还）做了特判：返回最后一个 **100% 概率**输出（跳过可能存在的概率副产）；`HeadboxBlockEntity.fillItem` 使用 `rollResults` 去首位（造纸框）——两处配合支持成形配方携带概率输出
 - `PapermakingBlockSpoutingBehaviour` 只认 FORMING 配方；Headbox 则回退原生注液（`FillingBySpout`）与 CDG 铸造（`CastingByHeadbox`）
 - 碎浆机的音效目前是临时的（`tickAudio` 有 TODO 注释，复用 MIXING 音效）
 - 碱法蒸煮副产的黑液若直接倒掉会污染区块（1 游戏日作物停长）；黑液目前只有 `bone_meal`（混合机：黑液 500mB + 骨头 → 骨粉 ×6）一个消耗配方，且与产出有缺口——浓缩燃烧发电等回收路径仍是开放的扩展点
 - `CRRecipeTypes` 中 `CRAFTING_PAPER_COLORING` 枚举被注释（`PaperColoring` 类存在但未注册）；`ENCHANT_PAPER_BINDING` 是第一个启用的自定义 crafting 配方（CustomRecipe，动态输出）
 - 附魔纸相关：`SawInject` 注入 `getRecipes` HEAD 后必须自设动态配方（含 duration）；附魔纸不能直接附魔装备（非 EnchantedBookItem）；纸+纸铁砧可合并（与原版附魔书一致）；绑定配方匹配的是纸的 `ENCHANTMENTS` 组件，而锯切产物写入 `STORED_ENCHANTMENTS`——改 `SawInject`/`EnchantPaperBindingRecipe` 时注意两者组件约定（见 03 §4.1）；1.21 中 `DataComponents` 在 `net.minecraft.core.component` 包
+- ⚠ **工作区 WIP 注意**：新增制浆配方的 id/输入互换已修复（`..._and_lye` 用碱液、`..._and_ash_lye` 用灰汁），runData 生成物已补全（见 06-roadmap.md R2）
 - 项目无 CI、无测试框架；改完核心机制建议 `runClient` 手动走一遍：碱法蒸煮 → 成形 → 压制，并验证黑液污染与指示仪
 
 ## 7. 验证清单（改完自检）
 
 - [ ] `./gradlew build` 通过
-- [ ] 改配方后 `runData` 已跑且 `src/generated/resources/` 已更新
+- [ ] 改配方后 `runData` 已跑且 `src/generated/resources/` 已更新（无缺失配方文件）
 - [ ] mixin 目标未被 Create 更新破坏（`defaultRequire: 1` 崩溃风险）
 - [ ] 跨模组引用均有 `RationalMods` / `whenModLoaded` 门控
 - [ ] 覆盖配方已在 `RecipeTargets` 登记
 - [ ] 新物品/流体/标签已补 `zh_cn.json`
+- [ ] 提交前清理 ⚠ WIP 标注并同步 doc/ 相关章节（见 doc/README.md「文档维护规范」）

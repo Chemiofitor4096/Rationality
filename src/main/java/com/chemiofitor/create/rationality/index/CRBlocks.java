@@ -12,6 +12,7 @@ import com.simibubi.create.content.processing.AssemblyOperatorBlockItem;
 import com.simibubi.create.foundation.data.AssetLookup;
 import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
@@ -26,6 +27,14 @@ import static com.simibubi.create.foundation.data.TagGen.axeOrPickaxe;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
 
 public class CRBlocks {
+    public static final BlockEntry<Block> COAL_GANGUE =
+            REGISTRATE.block("coal_gangue", Block::new)
+                    .initialProperties(SharedProperties::stone)
+                    .transform(pickaxeOnly())
+                    .defaultBlockstate()
+                    .simpleItem()
+                    .register();
+
     public static final BlockEntry<MechanicalPulperBlock> MECHANICAL_PULPER =
             REGISTRATE.block("mechanical_pulper", MechanicalPulperBlock::new)
                     .initialProperties(SharedProperties::stone)

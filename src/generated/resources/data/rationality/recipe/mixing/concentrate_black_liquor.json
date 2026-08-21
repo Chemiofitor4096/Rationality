@@ -1,0 +1,17 @@
+{
+  "type": "create:mixing",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "type": "neoforge:tag",
+      "amount": 250,
+      "tag": "rationality:black_liquor"
+    }
+  ],
+  "results": [
+    {
+      "amount": 100,
+      "id": "rationality:concentrated_black_liquor"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "rationality:quicklime"
+    },
+    {
+      "type": "neoforge:tag",
+      "amount": 100,
+      "tag": "rationality:concentrated_black_liquor"
+    }
+  ],
+  "results": [
+    {
+      "id": "rationality:calcium_carbonate"
+    },
+    {
+      "amount": 100,
+      "id": "rationality:lye"
+    }
+  ]
+}

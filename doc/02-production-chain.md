@@ -24,6 +24,8 @@
 
 **制浆双配方**（`CRPulpingRecipeGen`）的设计意图：不加碱不加热的简单制浆产量减半（500mB）；投入碱性物并加热的**碱法蒸煮**足量制浆（1000mB），但副产 250mB 黑液——玩家必须在产量与环境代价之间权衡，黑液要么妥善处理（详见 §4）要么接受污染。
 
+> ⚠ **工作区 WIP（未提交）**：`CRPulpingRecipeGen` 另有两个以**流体为碱源**的加热制浆配方（灰汁 1500mB / 碱液 1000mB，产出同碱法蒸煮）与一个碱液精浆配方，详见 03 §2.1；原 id/输入互换问题已修复（见 06-roadmap.md R2）。
+
 ## 2. 化学品循环（碱回收）
 
 现代 Kraft 制浆的碱回收映射。物品与流体在 `index/CRItems|CRFluids`，配方在 `CRMixingRecipeGen` 与 `CRRecipeProvider`：
@@ -33,7 +35,7 @@
    4× 草木灰 + 水 1000mB ──(混合机)──► 灰汁 1000mB
 
 ■ 苛化（制碱）：
-   生石灰 + 灰汁 500mB ──(混合机)──► 碳酸钙 + 钾碱液 500mB
+   生石灰 + 灰汁 500mB ──(混合机)──► 碳酸钙 + 碱液 500mB
 
 ■ 石灰循环（闭环）：
    石灰石 ──(熔烧，鼓风炉)──► 生石灰×4
@@ -45,12 +47,19 @@
    炭灰（煤炭烧制，非碱性，暂无配方用途）
 
 ■ 副产物链：
-   草木灰 ──► 灰汁 ──► 钾碱液（强碱，lye 标签）
+   草木灰 ──► 灰汁 ──► 碱液（强碱，lye 标签）
+
+■ 黑液回收（碱回收闭环，F1）：
+   黑液 250mB + 加热 ──(混合机)──► 浓缩黑液 100mB            （浓缩黑液为安全形态：普通 LiquidBlock，不产生污染）
+   浓缩黑液 100mB + 生石灰 ──(混合机)──► 碱液 100mB + 碳酸钙×1 （苛化回碱，量守恒 1:1；碳酸钙熔烧回生石灰）
+   黑液 250mB + 骨头 ──(混合机)──► 骨粉×6                     （低门槛消耗，碱不回补）
 ```
 
 - 草木灰：`可浆化物` 标签物品烧制（smelting 100 tick）产出
 - 生石灰：石灰石熔烧（blasting，产出 4）；或碳酸钙熔烧回收（blasting，1）
 - 碳酸钙在循环中充当"白泥"角色：苛化沉淀后熔烧回生石灰
+- `浓缩黑液`（`concentrated_black_liquor`）：黑液浓缩后安全形态，**不产生区块污染**（普通 `LiquidBlock`，非 `BlackLiquorBlock`）；浓度衰减（粘度/密度更高）；回收配方见上，回报率见 06 F1。
+- ⚠ 工作区 WIP：灰汁/碱液除产出途径外，已新增为碱法蒸煮的**流体碱源**与精浆原料（见 03 §2.1，未提交）
 
 ## 3. 流浆成形与压制（机制）
 
@@ -142,12 +151,13 @@ PollutionIndicatorClient.setPolluted → model override predicate（rationality:
 | Fine Pulp | 2000/1100 | 棕 | 精浆 |
 | Syrup | 2000/1200 | 陶土白 | 糖浆（跨模组联动） |
 | Ash Lye（灰汁） | 2000/1100 | 灰 | 草木灰浸出，`ash_lye` 标签 |
-| Caustic Potash Lye（钾碱液） | 2000/1100 | 灰 | 苛化产物，`lye` 标签，translucent 渲染 |
+| Lye（碱液） | 2000/1100 | 灰 | 苛化产物，`lye` 标签，translucent 渲染 |
 | Black Liquor（黑液） | 2000/1100 | 黑 | 碱法蒸煮副产；**污染源**，`BlackLiquorBlock` |
+| Concentrated Black Liquor（浓缩黑液） | 3000/1400 | 黑 | 黑液浓缩（蒸发）后的**安全形态**，普通 `LiquidBlock`，**不产生污染**；回收闭环核心（见 §2、03 §3.3） |
 | Glycerol（甘油） | 1100/2000 | 橙 | 生物柴油副产（CDG 联动），暂无下游用途 |
 | Yeast Liquid / Raw Yeast Liquid | 2000/1200 | 陶土白 / 陶土棕 | 酵母液体，已注册**暂无配方**（预留） |
 
-全部流体带桶 + 发射器行为；灰汁/钾碱液用 translucent 渲染。
+全部流体带桶 + 发射器行为；灰汁/碱液用 translucent 渲染。
 
 ### 标签（`index/CRTagKeys.java`）
 
@@ -158,4 +168,4 @@ PollutionIndicatorClient.setPolluted → model override predicate（rationality:
 | `rationality:oil_pressing_raw_material` / `sugar_raw_material` | 油料 / 糖原料（跨模组） |
 | `rationality:color_paper` | 彩色纸 |
 | `c:dusts/wood` / `c:buckets` | 木屑（预留）/ 流体桶（Pulp、Fine Pulp 桶） |
-| 流体：`pulp`/`fine_pulp`/`syrup`/`ash_lye`/`black_liquor`/`lye`/`glycerol`/`yeast_liquid`/`raw_yeast_liquid`、`c:plantoil`/`c:ethanol` | 流体分类 |
+| 流体：`pulp`/`fine_pulp`/`syrup`/`ash_lye`/`black_liquor`/`concentrated_black_liquor`/`lye`/`glycerol`/`yeast_liquid`/`raw_yeast_liquid`、`c:plantoil`/`c:ethanol` | 流体分类 |
