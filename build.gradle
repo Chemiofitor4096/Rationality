@@ -100,6 +100,13 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name = "CraftGraph"
+        url = "https://maven.kessokuteatime.work/releases"
+        content {
+            includeGroup "dev.craftgraph"
+        }
+    }
 }
 
 dependencies {
@@ -136,6 +143,11 @@ dependencies {
     implementation("maven.modrinth:create-steam-n-rails-1.21.1:${steam_n_rails_version}")
 
     implementation("maven.modrinth:create-liquid-fuel:${liquid_fuel_version}")
+
+    // Dev-environment only: CraftGraph lets AI tooling read the running game's recipes over a
+    // local HTTP API. It is a client-side mod (side = CLIENT in its metadata), so it is skipped
+    // on server/datagen runs; runtimeOnly keeps it out of the compile classpath and the built jar.
+    runtimeOnly("dev.craftgraph:craftgraph:${craftgraph_version}")
 }
 
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
