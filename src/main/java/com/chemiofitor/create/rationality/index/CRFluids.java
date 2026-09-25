@@ -247,6 +247,27 @@ public class CRFluids {
                     .build()
                     .register();
 
+    // 建材线原料：熟石灰+沙+水调浆（现实：石灰乳 = Ca(OH)2 悬浊液），石灰涂层系统的载体
+    public static final FluidEntry<BaseFlowingFluid.Flowing> LIME_MILK =
+            REGISTRATE.fluid("lime_milk", CreateRationality.asResource("block/lime_milk_still"),
+                            CreateRationality.asResource("block/lime_milk_flow"), CreateRegistrate::defaultFluidType)
+                    .lang("Lime Milk")
+                    .tag(CRTagKeys.Fluids.LIME_MILK)
+                    .properties(b -> b.viscosity(1200)
+                            .density(1300))
+                    .fluidProperties(p -> p.levelDecreasePerBlock(1)
+                            .tickRate(20)
+                            .slopeFindDistance(3)
+                            .explosionResistance(100f))
+                    .source(BaseFlowingFluid.Source::new)
+                    .block()
+                    .properties(p -> p.mapColor(MapColor.SNOW))
+                    .build()
+                    .bucket()
+                    .onRegister(CRFluids::registerFluidDispenseBehavior)
+                    .build()
+                    .register();
+
     public static void register() {}
 
     public static void registerFluidInteractions() {

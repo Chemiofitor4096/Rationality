@@ -37,6 +37,16 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
                 .require(FluidTags.WATER, 100)
                 .output(CRItems.SLAKED_LIME));
 
+        // 建材：石灰乳——熟石灰+沙+水调浆（现实：Ca(OH)2 悬浊液），石灰涂层系统的原料（渲染由作者设计）
+        create("lime_milk", b -> b
+                .require(CRItems.SLAKED_LIME)
+                .require(CRItems.SLAKED_LIME)
+                .require(Items.SAND)
+                .require(Items.SAND)
+                .require(FluidTags.WATER, 250)
+                .duration(200)
+                .output(CRFluids.LIME_MILK.get(), 500));
+
         create("calcium_carbonate", b -> b
                 .require(CRItems.QUICKLIME)
                 .require(CRTagKeys.Fluids.ASH_LYE, 500)

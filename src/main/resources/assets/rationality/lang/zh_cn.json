@@ -45,6 +45,7 @@
 	"item.rationality.black_paper": "黑纸",
 	"item.rationality.black_liquor_bucket": "黑液",
 	"item.rationality.ash_lye_bucket": "灰汁桶",
+	"item.rationality.lime_milk_bucket": "石灰乳桶",
 	"fluid.rationality.yeast_liquid": "酵母液",
 	"fluid.rationality.syrup": "糖浆",
 	"fluid.rationality.raw_yeast_liquid": "粗制酵母液",
@@ -55,6 +56,7 @@
 	"fluid.rationality.concentrated_black_liquor": "浓缩黑液",
 	"fluid.rationality.black_liquor": "黑液",
 	"fluid.rationality.ash_lye": "灰汁",
+	"fluid.rationality.lime_milk": "石灰乳",
 	"block.rationality.yeast_liquid": "酵母液",
 	"block.rationality.syrup": "糖浆",
 	"block.rationality.raw_yeast_liquid": "粗制酵母液",
@@ -69,5 +71,6 @@
 	"block.rationality.concentrated_black_liquor": "浓缩黑液",
 	"block.rationality.coal_gangue": "煤矸石",
 	"block.rationality.black_liquor": "黑液",
-	"block.rationality.ash_lye": "灰汁"
+	"block.rationality.ash_lye": "灰汁",
+	"block.rationality.lime_milk": "石灰乳"
 }

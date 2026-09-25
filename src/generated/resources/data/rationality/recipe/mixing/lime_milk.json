@@ -1,0 +1,29 @@
+{
+  "type": "create:mixing",
+  "ingredients": [
+    {
+      "item": "rationality:slaked_lime"
+    },
+    {
+      "item": "rationality:slaked_lime"
+    },
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "item": "minecraft:sand"
+    },
+    {
+      "type": "neoforge:tag",
+      "amount": 250,
+      "tag": "minecraft:water"
+    }
+  ],
+  "processing_time": 200,
+  "results": [
+    {
+      "amount": 500,
+      "id": "rationality:lime_milk"
+    }
+  ]
+}
