@@ -8,7 +8,7 @@
 
 | 大类 | 核心产物                                           | 主要机器 | 依赖模组 |
 |---|----------------------------------------------------|---|---|
-| **A 造纸主线** | 纸、粗纸、纸板（+ 湿浆/精浆流体）                  | 机械碎浆机+盆、Headbox/造纸台+注液口、压片机、压实机 | 无（本体） |
+| **A 造纸主线** | 纸、粗纸、纸板、纸箱（+ 湿浆/精浆流体）                  | 机械碎浆机+盆、Headbox/造纸台+注液口、压片机、压实机 | 无（本体） |
 | **B 化学品与碱回收** | 灰汁、碱液、生石灰、熟石灰、碳酸钙、骨粉、浓缩黑液回收 | 混合机、鼓风炉、熔炉 | 无 |
 | **C 附魔纸循环** | 附魔纸（enchanting_paper）、附魔书                 | 附魔台、动力锯、工作台 | 无 |
 | **D 食品与甜食** | Syrup、焦糖、炸油、肉制品、猪油、肥皂              | 碎浆机、混合机、注液口 | FD / Butchercraft / Bitterballen / Confectionery / Corn Delight |
@@ -19,9 +19,9 @@
 ■ 物料总览（仅本体产线）：
 
 可浆化物 ──制浆──► Pulp ──精浆──► Fine Pulp ──成形+压制──► 原版纸（成品）
-   │碱法蒸煮        │湿浆压实                │（纸板）
-   └──► 黑液(污染)  └──► 纸板           ┌──► 粗纸（中间物）
-                        └──► 湿浆 ────┘
+   │碱法蒸煮        │湿浆压实
+   └──► 黑液(污染)  └──► 纸板 ──3×3──► 纸箱（可装载于装置/矿车）
+  湿浆（Pulp 物品）──压制──► 粗纸（中间物）
 草木灰/石灰石/煤炭 ──烧制──► 草木灰/生石灰/炭灰 ──► 灰汁 ──苛化──► 碱液 + 碳酸钙 ──► 生石灰（循环）
 ```
 
@@ -97,9 +97,9 @@
 | `ash_lye` | 草木灰 ×4 + 水 1000mB | 灰汁 1000mB |
 | `slaked_lime` | 生石灰 + 水 100mB | 熟石灰 |
 | `calcium_carbonate`（苛化） | 生石灰 + 灰汁 500mB | 碳酸钙 + **碱液 500mB** |
-| `bone_meal` | **黑液 250mB** + 骨头 | 骨粉 ×6 |
+| `bone_meal` | **黑液 250mB** + 骨头 | 骨粉 ×3 |
 
-> `bone_meal` 是黑液的**零设备低门槛**处理出口（混合机）——不回收碱，但能在无设备时处置黑液；要回收化学碱走 3.3 回收闭环。
+> `bone_meal` 是黑液的**零设备兜底**减量出口（混合机）：产量＝原版（1 骨 → 3 粉），不放大、不回收碱，只是把黑液消耗掉；骨粉也**不再是碱性物**（`alkaline` 标签只剩草木灰/生石灰/熟石灰，见 3.3）。要回收化学碱走 3.3 的回收闭环。
 
 ### 3.2 石灰循环（熔烧/烧制，`CRRecipeProvider.buildRecipes`）
 
@@ -125,7 +125,10 @@
 |---|---|---|---|
 | `concentrate_black_liquor` | 黑液 250mB + **加热** | **浓缩黑液 100mB** | 蒸发水，浓缩 2.5×；浓缩液无污染 |
 | `lye_from_concentrated_black_liquor` | 浓缩黑液 100mB + 生石灰 | **碱液 100mB** + 碳酸钙 ×1 | 苛化回碱（量守恒 1:1）；碳酸钙熔烧回生石灰，维持石灰循环 |
-| `bone_meal`（低门槛） | 黑液 250mB + 骨头 | 骨粉 ×6 | 零设备，碱不回补 |
+| `bone_meal`（低门槛） | 黑液 250mB + 骨头 | 骨粉 ×3 | 兜底减量出口；产量＝原版（1 骨 → 3 粉），**不做放大** |
+
+- **骨粉不再是碱性物**（`CRDatagen` 已从 `alkaline` 标签移除）：否则"黑液 → 骨粉 → 蒸煮用碱"会绕开整条草木灰/石灰线；碱性物现在只有草木灰、生石灰、熟石灰三种
+- 岩浆与黑液的流体交互（`CRFluids.registerFluidInteractions`）：**岩浆源**接触黑液 → 黑曜石、**流动岩浆**接触黑液 → 煤矸石方块（与"岩浆+水"同构：**被替换/消耗的是岩浆，黑液只是触媒、不消耗**）→ 粉碎 → `crushed_coal_gangue`（燃料）。⚠ 煤矸石粉目前只有燃烧值（100 tick）、无工艺下游，且来源不设限（热量换废料），定位待定（见 07 §7-9）
 
 > **回报率**（以一次碱液版蒸煮碱入 1000mB 为基准）：苛化回补 **10%**（量守恒下浓缩/苛化均不虚增，其余碱并入损失），骨粉 **0%**；碱损失永不归零，草木灰仍是最终碱源——详见 06 F1。
 
@@ -140,7 +143,7 @@
 
   合成：8× 经验粒（EXP_NUGGET，环形）+ 1 原版纸 ──► 1× enchanting_paper（crafting/enchanting_paper）
   附魔台：enchanting_paper 可直接附魔（enchantability=1），等级恒压 1 级、费用 1 青金石
-  锯切：附魔书 ──动力锯──► 每个附魔按等级产出 n 张纸（各带等级 1 的该附魔）
+  锯切：附魔书 ──动力锯──► 每个附魔按等级产出 n 张**独立**纸（不可堆叠，各带等级 1 的该附魔）
 
 ■ 消耗：
 
@@ -148,16 +151,18 @@
      附魔 = 所有纸的总和：同名相加 ≤ maxLevel；等级由张数堆叠（4 张锋利 I 纸 → 锋利 IV 书）
 ```
 
+> 附魔纸 `stacksTo(1)`（同附魔书）：1 张 = 1 格 = 1 级，与绑定配方"每格 1 张计 1 级"的计数方式一致，张数守恒不降级。锯切产出的纸全部落在动力锯输出槽（共 31 格），单本书附魔总等级 >31 时超出部分会丢失（正常书籍远低于此上限）。
+
 ### 4.1 机制细节（源码核实）
 
 | 环节 | 实现 | 说明 |
 |---|---|---|
-| 物品能力 | `EnchantingPaperItem` | `getEnchantmentValue=1`（可进附魔台）；`supportsEnchantment=true`（接受全部附魔）；`isEnchantable=true`；`isBookEnchantable=false`（**不能用附魔书附魔**）；`isFoil` 按 `STORED_ENCHANTMENTS` 显示 glint |
+| 物品能力 | `EnchantingPaperItem` | `stacksTo(1)`（不可堆叠，同附魔书）；`getEnchantmentValue=1`（可进附魔台）；`supportsEnchantment=true`（接受全部附魔）；`isEnchantable=true`；`isBookEnchantable=false`（**不能用附魔书附魔**）；glint 走默认逻辑（`ENCHANTMENTS` 非空即发光） |
 | 附魔台 | `event/EnchantingHandler` | `EnchantmentLevelSetEvent` 压等级=1；`PlayerEnchantItemEvent` 累加累积惩罚：每次附魔 = 1 次铁砧式操作，`REPAIR_COST` ×2+1（1、3、7…2^n−1，第 6 次 63，封顶 2147483647） |
-| 锯切拆书 | `mixin/SawInject`（动态配方 `rationality:cutting/enchanted_book`，120 tick） | 注入 `SawBlockEntity.getRecipes` HEAD+cancel；每个附魔按其等级出 n 张纸（`STORED_ENCHANTMENTS` 等级恒 1）；书惩罚按总张数均摊：每张 = ⌈书惩罚÷总张数⌉（书(7) 切 4 张 → 各 2） |
+| 锯切拆书 | `mixin/SawInject`（动态配方 `rationality:cutting/enchanted_book`，120 tick） | 注入 `SawBlockEntity.getRecipes` HEAD+cancel；每个附魔按其等级出 n 张**独立**纸（每张一个输出、`ENCHANTMENTS` 等级恒 1）；书惩罚按总张数均摊：每张 = ⌈书惩罚÷总张数⌉（书(7) 切 4 张 → 各 2） |
 | 绑定合成 | `EnchantPaperBindingRecipe`（CustomRecipe，`enchant_paper_binding.json` 手写仅 type+category） | `matches`：≥3 张纸 + 恰好 1 皮革 + **至少一张纸带附魔**；`assemble`：合并 `ENCHANTMENTS`（同名相加 ≤ maxLevel），书惩罚 = max(纸惩罚)×2+1（全 0 纸 → 1），写 `STORED_ENCHANTMENTS` + glint override |
 
-- **"等级"概念由张数承载**：纸等级恒 1，4 张锋利 I 纸 = 锋利 IV
+- **"等级"概念由张数承载**：纸等级恒 1 且不可堆叠，1 张占 1 格，4 张锋利 I 纸 = 锋利 IV
 - **不能直接用于附魔装备**：纸非 `EnchantedBookItem`，铁砧"书→装备"分支不触发（纸+装备不会转移附魔）
 - 纸+纸可在铁砧合并（与原版附魔书一致）；铁砧/砂轮花费与合并公式走原版规则（花费=两输入惩罚之和、结果=max×2+1、仅重命名不加、生存 ≥40 级 → Too expensive、砂轮清非诅咒附魔后惩罚 = 2^诅咒数−1）
 
@@ -165,14 +170,22 @@
 
 ## 5. 大类 D · 食品与甜食
 
-### 5.1 糖浆 Syrup（碎浆机中制取，D 类原料）
+### 5.1 糖浆 Syrup 与砂糖（碎浆机中制取，D 类原料）
 
 `syrup`（碎浆机：糖原料 ×4 + 水 1000mB + 加热 → 1000mB，糖原料 = 甘蔗/甜菜/苹果/甜浆果/紫颂果 + 可选玉米）。下游流向：
 
 ```
 Syrup ──► 焦糖（5.2：Confectionery 混合 / Cannons 熔炼）
-   └──► 乙醇（E 类：CDG 发酵）
+   ├──► 乙醇（E 类：CDG 发酵）
+   └──► 砂糖（熬煮结晶）
 ```
+
+**砂糖（minecraft:sugar）的工业来源**——原版制糖配方已禁（04），砂糖是全实例 31 条配方（蛋糕、派、发酵蛛眼等）的必需品：
+
+| 配方 id | 输入 | 输出 | 备注 |
+|---|---|---|---|
+| `sugar_from_syrup` | Syrup 250mB + 加热 | 砂糖 ×2 | 熬煮结晶；250mB ≈ 1 份糖原料，比原版 1 甘蔗→1 糖更优 |
+| `sugar_from_honey` | 蜂蜜（`c:honey`）500mB + 加热 | 砂糖 ×3 | 走 Create 流体面；500mB = 半个蜜块，`c:honey` 标签兼容模组蜜；两条结晶路线都是原版速率的 2 倍 |
 
 ### 5.2 焦糖线（Confectionery + Corn Delight）
 
@@ -273,6 +286,7 @@ Syrup ──► 乙醇（发酵）──► 生物柴油原料
 | `crafting/frame_from_canvas` | 木棍 + 帆布 | 造纸框（FD 加载时） |
 | `crafting/pollution_indicator` | 4× 锌锭 + 红石（十字形） | 污染指示仪 |
 | `crafting/enchanting_paper` | 8× 经验粒 + 原版纸（环形） | enchanting_paper（见 §4） |
+| `crafting/cardboard_crate` | Create 纸板 ×9（3×3 满铺） | 纸箱 cardboard_crate（9 格存储，可装载于装置/矿车） |
 | `crafting/empty_schematic` | 淡蓝色纸 | 空白蓝图（Create） |
 
 ---
@@ -290,5 +304,5 @@ Syrup ──► 乙醇（发酵）──► 生物柴油原料
 3. 新配方若与其他模组已有配方冲突，先到 `RecipeTargets` 登记删除（见 04-recipe-ban.md）
 4. 改完跑 `./gradlew runData` 重新生成，并核对本表与生成物逐条一致
 5. 新增物品/流体记得同步 `zh_cn.json`（手写）——en_us 由 datagen 生成
-6. 附魔纸/附魔书逻辑在 `EnchantPaperBindingRecipe` + `SawInject` + `EnchantingHandler` 三处，改动时注意三者对 `ENCHANTMENTS` / `STORED_ENCHANTMENTS` / `REPAIR_COST` 组件的约定一致（见 §4.1）
+6. 附魔纸/附魔书逻辑在 `EnchantPaperBindingRecipe` + `SawInject` + `EnchantingHandler` 三处，**组件约定**：纸（附魔台附魔与锯切产物）统一用 `ENCHANTMENTS`，附魔书用 `STORED_ENCHANTMENTS`；`REPAIR_COST` 三处都读写同一组件（见 §4.1）
 7. **配方 id 命名与输入语义保持一致**（如用灰汁就写 `ash_lye`、用碱液就写 `lye`）——此前 WIP 中 `with_heat_and_lye`/`with_heat_and_ash_lye` 的输入互换已修复（R2），后续新增配方时注意

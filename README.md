@@ -20,7 +20,7 @@
 ./gradlew runData      # 重新生成 src/generated/resources/（改配方后必跑）
 ```
 
-环境要求：Java 21，NeoForge 21.1.233（MC 1.21.1），依赖版本见 [gradle.properties](gradle.properties)。
+环境要求：Java 21，NeoForge 21.1.251（MC 1.21.1），依赖版本见 [gradle.properties](gradle.properties)。
 
 ## 文档
 

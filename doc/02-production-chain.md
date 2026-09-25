@@ -20,6 +20,9 @@
 ■ 压制（压片机）：
    Pulp 物品     ──► 粗纸 Raw Paper
    fine_pulp 物品 ──► 原版纸 Paper
+
+■ 包装线（F2，纸箱）：
+   纸板（Create）×9 ──(工作台 3×3)──► 纸箱 cardboard_crate（9 格存储方块，可装载于装置/矿车）
 ```
 
 **制浆双配方**（`CRPulpingRecipeGen`）的设计意图：不加碱不加热的简单制浆产量减半（500mB）；投入碱性物并加热的**碱法蒸煮**足量制浆（1000mB），但副产 250mB 黑液——玩家必须在产量与环境代价之间权衡，黑液要么妥善处理（详见 §4）要么接受污染。
@@ -43,7 +46,7 @@
    生石灰 + 水 100mB ──(混合机)──► 熟石灰 ──┘（熟石灰也是碱性物）
 
 ■ 碱性物来源（rationality:alkaline 标签）：
-   草木灰（可浆化物烧制）、生石灰、熟石灰、骨粉（datagen 补充）
+   草木灰（可浆化物烧制）、生石灰、熟石灰
    炭灰（煤炭烧制，非碱性，暂无配方用途）
 
 ■ 副产物链：
@@ -52,13 +55,16 @@
 ■ 黑液回收（碱回收闭环，F1）：
    黑液 250mB + 加热 ──(混合机)──► 浓缩黑液 100mB            （浓缩黑液为安全形态：普通 LiquidBlock，不产生污染）
    浓缩黑液 100mB + 生石灰 ──(混合机)──► 碱液 100mB + 碳酸钙×1 （苛化回碱，量守恒 1:1；碳酸钙熔烧回生石灰）
-   黑液 250mB + 骨头 ──(混合机)──► 骨粉×6                     （低门槛消耗，碱不回补）
+   黑液 250mB + 骨头 ──(混合机)──► 骨粉×3                     （兜底减量出口；产量＝原版，不放大）
+   岩浆源 + 黑液 ──(流体交互)──► 黑曜石；流动岩浆 + 黑液 ──► 煤矸石（岩浆被替换，黑液不消耗）→ 粉碎 → 煤矸石粉（燃料）
 ```
 
 - 草木灰：`可浆化物` 标签物品烧制（smelting 100 tick）产出
 - 生石灰：石灰石熔烧（blasting，产出 4）；或碳酸钙熔烧回收（blasting，1）
 - 碳酸钙在循环中充当"白泥"角色：苛化沉淀后熔烧回生石灰
 - `浓缩黑液`（`concentrated_black_liquor`）：黑液浓缩后安全形态，**不产生区块污染**（普通 `LiquidBlock`，非 `BlackLiquorBlock`）；浓度衰减（粘度/密度更高）；回收配方见上，回报率见 06 F1。
+- 骨粉**不在** `alkaline` 标签内：否则"黑液→骨粉→蒸煮用碱"会绕开草木灰/石灰线（见 03 §3.3）
+- ⚠ 煤矸石粉（`crushed_coal_gangue`）目前只有 100 tick 燃烧值、无工艺下游，定位待定（见 07 §7-9）
 - ⚠ 工作区 WIP：灰汁/碱液除产出途径外，已新增为碱法蒸煮的**流体碱源**与精浆原料（见 03 §2.1，未提交）
 
 ## 3. 流浆成形与压制（机制）
@@ -143,6 +149,12 @@ PollutionIndicatorClient.setPolluted → model override predicate（rationality:
 | `pollution_indicator`（污染指示仪） | 双材质状态显示（见 §4） |
 | `color_paper` | 15 种彩色纸（染料色**除白色**），`ColorPaperItem`，`rationality:color_paper` 标签 |
 
+### 方块（`index/CRBlocks.java`）
+
+| 方块 | 说明 |
+|---|---|
+| `cardboard_crate`（纸箱） | 9 格存储方块（`CardboardCrateBlockEntity`，`ItemStackHandler(9)`）；仿 Create 板条箱：`AllShapes.CRATE_BLOCK_SHAPE`，经 `mountedItemStorage(AllMountedStorageTypes.SIMPLE)` **可装载于装置/矿车**（装配时复制内容、拆解时写回）；拆毁时掉落内容物 |
+
 ### 流体（`index/CRFluids.java`）
 
 | 流体 | 粘度/密度 | 颜色 | 备注 |
@@ -164,7 +176,7 @@ PollutionIndicatorClient.setPolluted → model override predicate（rationality:
 | 标签 | 用途 |
 |---|---|
 | `create:pulpifiable` | 可浆化物（create 命名空间） |
-| `rationality:alkaline` | 碱性物（草木灰/生石灰/熟石灰 + datagen 补充骨粉） |
+| `rationality:alkaline` | 碱性物（草木灰/生石灰/熟石灰；骨粉已移出，见 §2） |
 | `rationality:oil_pressing_raw_material` / `sugar_raw_material` | 油料 / 糖原料（跨模组） |
 | `rationality:color_paper` | 彩色纸 |
 | `c:dusts/wood` / `c:buckets` | 木屑（预留）/ 流体桶（Pulp、Fine Pulp 桶） |

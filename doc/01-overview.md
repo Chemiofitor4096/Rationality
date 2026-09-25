@@ -2,7 +2,7 @@
 
 ## 定位
 
-**Create Rationality** 是 Minecraft 1.21.1 的 **Create（机械动力）Addon**，只支持 **NeoForge**（21.1.233）。核心玩法：用机械动力的动力/流体/传送带体系，把原版"甘蔗合成纸"替换成一条完整的**工业造纸产线**（碱法蒸煮 → 精浆 → 流浆成形 → 压制），并延伸出**化学品回收**（石灰循环、碱液苛化）与**黑液污染**机制。
+**Create Rationality** 是 Minecraft 1.21.1 的 **Create（机械动力）Addon**，只支持 **NeoForge**（21.1.251）。主题锚点是**化工（实用主义化学）**：把原版"甘蔗合成纸"替换成完整的**工业造纸产线**（碱法蒸煮 → 精浆 → 流浆成形 → 压制）是当前的旗舰产线而非项目边界，并延伸出**化学品回收**（石灰循环、碱液苛化）与**黑液污染**机制；酸碱、气体、建材等新产线的准入走下方设计语言的判据。
 
 - 模组 ID：`rationality`，包根：`com.chemiofitor.create.rationality`
 - Java 21，Parchment 映射（2024.11.17），NeoGradle `net.neoforged.moddev` 2.0.141
@@ -14,7 +14,7 @@
 
 | 项 | 值 |
 |---|---|
-| Minecraft / Loader | 1.21.1 / NeoForge 21.1.233（仅 NeoForge，无多加载器） |
+| Minecraft / Loader | 1.21.1 / NeoForge 21.1.251（仅 NeoForge，无多加载器） |
 | Java / 映射 | 21 / Parchment 2024.11.17 |
 | 构建 | Gradle wrapper + `net.neoforged.moddev` 2.0.141 |
 | 必装依赖 | Create 6.0.10-280、Ponder 1.0.82、Flywheel 1.0.6、Registrate MC1.21-1.3.0+67、JEI 19.27.0.340 |
@@ -76,3 +76,6 @@ doc/                            # 本文档集（索引见 README.md）
 5. **复用 Create 原生机制**：盆地加工（BasinOperatingBlockEntity）、传送带处理（BeltProcessingBehaviour）、注液口（Spout）、顺序装配（Sequenced Assembly）全部继承/挂钩 Create 现有 API
 6. **可选模组深度整合**：FD/CDG/Bitterballen 等的相关配方通过本产线的中间产物（Syrup、植物油等）串起来（详见 03-recipes.md）
 7. **注册单一入口**：所有内容经 `index/` 索引类 + CreateRegistrate 注册，主类构造函数统一调用
+8. **化学实用主义四判据**：功能（玩法相同即合并，钠/钾碱液合一）、密度（注册前必须有 ≥2 条真实下游）、层级（流体放宽类别，元素差异用固体物品承载）、工艺（浓度/纯度用加热条件与中间物表达，不注册新流体）
+9. **禁令的判据是现实逻辑**：产物在现实中如何获得，配方就应当如何获得——回收/再生是合法来源（脏纸洗纸保留），"非前体一步跳到产物"的直达配方才禁（判据成文与审计方法见 04）
+10. **无孤儿，预留挂账**：每个注册物至少一条真实下游；"预留"允许，但必须在路线图挂编号（如 06 F5）

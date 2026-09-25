@@ -4,7 +4,7 @@
 
 **Create Rationality** — a Minecraft **Create addon** (NeoForge-only) that replaces vanilla paper with an industrial papermaking chain (pulping -> forming -> pressing). Mod id: `rationality`. Active development; git repository (main branch).
 
-- Minecraft 1.21.1, NeoForge 21.1.233, Java 21, Parchment mappings 2024.11.17
+- Minecraft 1.21.1, NeoForge 21.1.251, Java 21, Parchment mappings 2024.11.17
 - Build: Gradle wrapper, `net.neoforged.moddev` 2.0.141
 - For Minecraft mod work, load the `minecraft-modder-neoforge` skill.
 

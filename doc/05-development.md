@@ -12,9 +12,10 @@
 ./gradlew runGameTestServer  # 运行游戏测试（当前无测试用例）
 ```
 
-- 依赖版本全部集中在 `gradle.properties`（Create 6.0.10-280、NeoForge 21.1.233、JEI 19.27.0.340 等），**不要**在 build.gradle 硬编码
+- 依赖版本全部集中在 `gradle.properties`（Create 6.0.10-280、NeoForge 21.1.251、JEI 19.27.0.340 等），**不要**在 build.gradle 硬编码
 - 运行目录 `run/`（含下载的依赖模组）已 gitignore
 - 调试 mixin 可加 JVM 参数 `-Dmixin.debug.export=true`
+- 开发环境额外挂了 **CraftGraph**（`dev.craftgraph:craftgraph`，`runtimeOnly`，见 `gradle.properties`）：客户端侧 mod，把运行中游戏的配方数据通过本地 HTTP（127.0.0.1:25585）暴露给 AI 工具，用于核对配方与产线；**只有 `runClient` 进世界后才有数据**，且不参与构建产物。它要求 NeoForge ≥ 21.1.251（本项目 `neo_version` 已对齐，251 是 1.21.1 线的最后一版）
 
 ## 2. 新增内容的标准流程
 
@@ -74,9 +75,9 @@
 - `FormingRecipe.getResultItem` 对"输出即输入"的配方（造纸框返还）做了特判：返回最后一个 **100% 概率**输出（跳过可能存在的概率副产）；`HeadboxBlockEntity.fillItem` 使用 `rollResults` 去首位（造纸框）——两处配合支持成形配方携带概率输出
 - `PapermakingBlockSpoutingBehaviour` 只认 FORMING 配方；Headbox 则回退原生注液（`FillingBySpout`）与 CDG 铸造（`CastingByHeadbox`）
 - 碎浆机的音效目前是临时的（`tickAudio` 有 TODO 注释，复用 MIXING 音效）
-- 碱法蒸煮副产的黑液若直接倒掉会污染区块（1 游戏日作物停长）；黑液目前只有 `bone_meal`（混合机：黑液 500mB + 骨头 → 骨粉 ×6）一个消耗配方，且与产出有缺口——浓缩燃烧发电等回收路径仍是开放的扩展点
+- 碱法蒸煮副产的黑液若直接倒掉会污染区块（1 游戏日作物停长）；回收路径见 03 §3.3：浓缩（安全形态，不污染）→ 苛化回碱（10% 回补）+ 骨粉兜底（产量＝原版 ×3，无放大）。骨粉已移出 `alkaline` 标签，否则"黑液 → 骨粉 → 蒸煮用碱"会绕开草木灰/石灰线
 - `CRRecipeTypes` 中 `CRAFTING_PAPER_COLORING` 枚举被注释（`PaperColoring` 类存在但未注册）；`ENCHANT_PAPER_BINDING` 是第一个启用的自定义 crafting 配方（CustomRecipe，动态输出）
-- 附魔纸相关：`SawInject` 注入 `getRecipes` HEAD 后必须自设动态配方（含 duration）；附魔纸不能直接附魔装备（非 EnchantedBookItem）；纸+纸铁砧可合并（与原版附魔书一致）；绑定配方匹配的是纸的 `ENCHANTMENTS` 组件，而锯切产物写入 `STORED_ENCHANTMENTS`——改 `SawInject`/`EnchantPaperBindingRecipe` 时注意两者组件约定（见 03 §4.1）；1.21 中 `DataComponents` 在 `net.minecraft.core.component` 包
+- 附魔纸相关：`SawInject` 注入 `getRecipes` HEAD 后必须自设动态配方（含 duration），且**每张纸一个输出**（附魔纸 `stacksTo(1)`，堆叠会导致绑定合成少算等级）；附魔纸不能直接附魔装备（非 EnchantedBookItem）；纸+纸铁砧可合并（与原版附魔书一致）；**组件约定**：纸（附魔台附魔、锯切产物）统一写 `ENCHANTMENTS`——附魔台对非书物品本就写该组件，绑定配方也据此合并；附魔书才用 `STORED_ENCHANTMENTS`（绑定产出的书写 STORED）。改 `SawInject`/`EnchantPaperBindingRecipe` 时保持该约定（见 03 §4.1）；1.21 中 `DataComponents` 在 `net.minecraft.core.component` 包
 - ⚠ **工作区 WIP 注意**：新增制浆配方的 id/输入互换已修复（`..._and_lye` 用碱液、`..._and_ash_lye` 用灰汁），runData 生成物已补全（见 06-roadmap.md R2）
 - 项目无 CI、无测试框架；改完核心机制建议 `runClient` 手动走一遍：碱法蒸煮 → 成形 → 压制，并验证黑液污染与指示仪
 
