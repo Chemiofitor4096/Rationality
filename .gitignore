@@ -42,3 +42,6 @@ repo/
 
 .zcode/
 .claude/
+
+### Bilibili feedback tooling (contains cookie & 16MB exe, never commit) ###
+bilibili/
