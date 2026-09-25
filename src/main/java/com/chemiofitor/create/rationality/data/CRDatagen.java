@@ -56,9 +56,7 @@ public class CRDatagen {
                 });
 
                 CreateRationality.REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, provider -> {
-                        provider.addTag(CRTagKeys.Items.ALKALINE)
-                                        .add(Items.BONE_MEAL);
-
+                        // 骨粉不再是碱性物：否则"黑液→骨粉→蒸煮用碱"会绕开整条草木灰/石灰线
                         provider.addTag(CRTagKeys.Items.BUCKETS)
                                         .add(CRFluids.FINE_PULP.getBucket().orElseThrow())
                                         .add(CRFluids.PULP.getBucket().orElseThrow());

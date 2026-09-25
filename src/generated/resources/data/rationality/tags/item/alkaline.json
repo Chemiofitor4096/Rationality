@@ -2,7 +2,6 @@
   "values": [
     "rationality:plant_ash",
     "rationality:quicklime",
-    "rationality:slaked_lime",
-    "minecraft:bone_meal"
+    "rationality:slaked_lime"
   ]
 }

@@ -43,10 +43,12 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
                 .output(CRItems.CALCIUM_CARBONATE)
                 .output(CRFluids.LYE.get(), 500));
 
+        // 骨粉：黑液当溶剂消化骨胶原，产量＝原版（1 骨 → 3 粉），不做放大——
+        // 它的定位是"零设备兜底"的黑液减量出口，不是骨粉产地（骨粉也不再是碱性物）
         create("bone_meal", b -> b
                 .require(CRTagKeys.Fluids.BLACK_LIQUOR, 250)
                 .require(Items.BONE)
-                .output(Items.BONE_MEAL, 6));
+                .output(Items.BONE_MEAL, 3));
 
         // ── 黑液回收闭环（F1）──────────────────────────────────────────────
         // 浓缩：黑液 + 加热 → 蒸发水分 → 浓缩黑液（安全形态，不再产生污染）
@@ -62,6 +64,22 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
                 .require(CRItems.QUICKLIME)
                 .output(CRFluids.LYE.get(), 100)
                 .output(CRItems.CALCIUM_CARBONATE));
+
+        // 糖：熬煮结晶（原版制糖已禁，见 04 审计——全实例 31 条配方依赖砂糖）
+        // 糖浆 250mB ≈ 1 份糖原料，产出 2 糖（原版 1 甘蔗 → 1 糖，工业路线更优）
+        create("sugar_from_syrup", b -> b
+                .require(CRTagKeys.Fluids.SYRUP, 250)
+                .requiresHeat(HeatCondition.HEATED)
+                .duration(200)
+                .output(Items.SUGAR, 2));
+
+        // 蜂蜜走 c:honey 标签（与 Create 蜂蜜配方同口径，兼容模组蜜）；500mB = 半个蜜块
+        // 产出对齐"工业 = 原版速率 2 倍"：原版 1000mB 蜂蜜 → 3 糖，工业 1000mB → 6 糖（与糖浆路线同倍率）
+        create("sugar_from_honey", b -> b
+                .require(CRTagKeys.Fluids.HONEY, 500)
+                .requiresHeat(HeatCondition.HEATED)
+                .duration(200)
+                .output(Items.SUGAR, 3));
 
         // 柴油动力
         create("oilpaper", b -> b.output(CRItems.OILPAPER)

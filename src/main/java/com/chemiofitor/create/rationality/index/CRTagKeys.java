@@ -37,6 +37,7 @@ public class CRTagKeys {
     public static final class Fluids {
         public static final TagKey<Fluid> PLANTOIL = create("c", "plantoil");
         public static final TagKey<Fluid> ETHANOL = create("c", "ethanol");
+        public static final TagKey<Fluid> HONEY = create("c", "honey");
 
         public static final TagKey<Fluid> PULP = create("rationality", "pulp");
         public static final TagKey<Fluid> FINE_PULP = create("rationality", "fine_pulp");

@@ -1,0 +1,18 @@
+{
+  "type": "create:mixing",
+  "heat_requirement": "heated",
+  "ingredients": [
+    {
+      "type": "neoforge:tag",
+      "amount": 500,
+      "tag": "c:honey"
+    }
+  ],
+  "processing_time": 200,
+  "results": [
+    {
+      "count": 3,
+      "id": "minecraft:sugar"
+    }
+  ]
+}
