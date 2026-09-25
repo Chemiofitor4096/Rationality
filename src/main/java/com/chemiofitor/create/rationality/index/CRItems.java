@@ -55,7 +55,7 @@ public class CRItems {
 
     public static final ItemEntry<EnchantingPaperItem> ENCHANTING_PAPER =
             REGISTRATE.item("enchanting_paper", EnchantingPaperItem::new)
-                    .properties(prop -> prop.rarity(Rarity.UNCOMMON))
+                    .properties(prop -> prop.rarity(Rarity.UNCOMMON).stacksTo(1))
                     .register();
 
     public static final ItemEntry<Item> OILPAPER = REGISTRATE.item("oilpaper", Item::new)
