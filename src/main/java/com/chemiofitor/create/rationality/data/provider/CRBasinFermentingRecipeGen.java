@@ -1,6 +1,7 @@
 package com.chemiofitor.create.rationality.data.provider;
 
 import com.chemiofitor.create.rationality.CreateRationality;
+import com.chemiofitor.create.rationality.compat.RationalMods;
 import com.chemiofitor.create.rationality.index.CRFluids;
 import com.jesz.createdieselgenerators.CDGFluids;
 import com.jesz.createdieselgenerators.CDGRecipes;
@@ -19,7 +20,8 @@ public class CRBasinFermentingRecipeGen extends StandardProcessingRecipeGen<Basi
         create("ethanol", b -> b
                 .require(CRFluids.SYRUP.get(), 1000)
                 .duration(400)
-                .output(CDGFluids.ETHANOL.get(), 1000));
+                .output(CDGFluids.ETHANOL.get(), 1000)
+                .whenModLoaded(RationalMods.DIESEL_GENERATORS.modid));
     }
 
     @Override
