@@ -75,21 +75,10 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
                 .output(CRFluids.LYE.get(), 100)
                 .output(CRItems.CALCIUM_CARBONATE));
 
-        // 糖：熬煮结晶（原版制糖已禁，见 04 审计——全实例 31 条配方依赖砂糖）
-        // 糖浆 250mB ≈ 1 份糖原料，产出 2 糖（原版 1 甘蔗 → 1 糖，工业路线更优）
-        create("sugar_from_syrup", b -> b
-                .require(CRTagKeys.Fluids.SYRUP, 250)
-                .requiresHeat(HeatCondition.HEATED)
-                .duration(200)
-                .output(Items.SUGAR, 2));
-
-        // 蜂蜜走 c:honey 标签（与 Create 蜂蜜配方同口径，兼容模组蜜）；500mB = 半个蜜块
-        // 产出对齐"工业 = 原版速率 2 倍"：原版 1000mB 蜂蜜 → 3 糖，工业 1000mB → 6 糖（与糖浆路线同倍率）
-        create("sugar_from_honey", b -> b
-                .require(CRTagKeys.Fluids.HONEY, 500)
-                .requiresHeat(HeatCondition.HEATED)
-                .duration(200)
-                .output(Items.SUGAR, 3));
+        // ── 糖路线：【已按作者决定删除，重构中】────────────────────────────
+        // 2026-09-26：糖浆→糖 与 糖浆→焦糖 是同一机器同一输入（糖浆+加热）的两条平行配方，
+        // 玩家无法从输入分辨，重叠成立。糖的生产整体撤下，待"糖浆→糖→焦糖"阶梯结构定案后重建。
+        // 原版制糖禁令维持（04），砂糖暂回零来源状态（31 条配方依赖它，见 04 审计注）。
 
         // 柴油动力
         create("oilpaper", b -> b.output(CRItems.OILPAPER)
