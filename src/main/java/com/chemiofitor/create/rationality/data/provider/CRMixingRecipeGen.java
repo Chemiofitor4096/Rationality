@@ -11,6 +11,7 @@ import com.pyzpre.createbitterballen.index.FluidRegistry;
 import com.simibubi.create.api.data.recipe.MixingRecipeGen;
 import com.simibubi.create.content.processing.recipe.HeatCondition;
 import net.mcreator.createconfectionery.init.CreateConfectioneryModFluids;
+import net.mcreator.createconfectionery.init.CreateConfectioneryModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.FluidTags;
@@ -75,7 +76,7 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
                 .output(CRFluids.LYE.get(), 100)
                 .output(CRItems.CALCIUM_CARBONATE));
 
-        // ── 糖路线 ─────────────────────────────────────────────────────────
+        // ── 糖路线（网状结构：三条入焦糖的边 + 两条入糖的边，见 07 §4.4）────────
         // 糖浆：糖原料浸出/熬煮。原在碎浆机（操作不正确：取汁是浸出，不是打浆），
         // 迁到混合机后甘蔗不再"一料两解"（碎浆机里的甘蔗只出纸浆）。
         create("syrup", b -> b
@@ -86,8 +87,24 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
                 .require(FluidTags.WATER, 1000)
                 .requiresHeat(HeatCondition.HEATED)
                 .output(CRFluids.SYRUP.get(), 1000));
-        // 待重构：糖浆 →（结晶）→ 糖 →（焦化）→ 焦糖（阶梯结构，2026-09-26 定案）。
-        // 原版制糖禁令维持（04），砂糖现为零来源（31 条配方依赖它），重建时一并解决。
+        // 糖的两条来源（均为 CCB 冷冻结晶，手写 JSON 见 src/main/resources/data/rationality/recipe/chilled_mixing/）：
+        //   sugar_from_syrup：糖浆 250mB → 砂糖×2     ｜ sugar_from_honey：蜂蜜 500mB → 砂糖×3
+        // 焦糖的两条来源（互不冲突——输入不同 / 条件相反，见下）：
+        //   本配方：糖浆 1000mB + 加热 → 焦糖 400（直连边；2026-09-29 比例从 500 下调）
+        //   Confectionery 原版 caramel_recipe：砂糖×2 + 水250 + 加热 → 焦糖 250（已撤禁）
+        create("caramel", b -> b
+                .require(CRTagKeys.Fluids.SYRUP, 1000)
+                .requiresHeat(HeatCondition.HEATED)
+                .output(CreateConfectioneryModFluids.CARAMEL.get(), 400)
+                .whenModLoaded(RationalMods.CONFECTIONERY.modid));
+
+        // 彩蛋：糖浆 + 蜂蜜 → 蜂蜜糖（偷懒捷径，省面粉但产量减半；原版为 糖×2 + 面粉 + 蜂蜜250 → ×4）
+        create("honey_candy_from_syrup", b -> b
+                .require(CRTagKeys.Fluids.SYRUP, 250)
+                .require(CRTagKeys.Fluids.HONEY, 250)
+                .requiresHeat(HeatCondition.HEATED)
+                .output(CreateConfectioneryModItems.HONEY_CANDY.get(), 2)
+                .whenModLoaded(RationalMods.CONFECTIONERY.modid));
 
         // 柴油动力
         create("oilpaper", b -> b.output(CRItems.OILPAPER)

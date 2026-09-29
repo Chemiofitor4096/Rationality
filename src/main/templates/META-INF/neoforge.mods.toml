@@ -40,3 +40,11 @@ type="required"
 versionRange="[6.0.8,)"
 ordering="NONE"
 side="BOTH"
+
+# 硬依赖（2026-09-29 定调）：机巧新生提供气体/冷却/化工机器，是糖线与化工扩展的前置
+[[dependencies.${mod_id}]]
+modId="createcraftedbeginning"
+type="required"
+versionRange="[${crafted_beginning_version},)"
+ordering="AFTER"
+side="BOTH"

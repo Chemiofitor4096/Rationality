@@ -167,30 +167,33 @@
 
 ## 5. 大类 D · 食品与甜食
 
-### 5.1 糖浆 Syrup 与砂糖（阶梯结构，混合机 + CCB 冷却）
+### 5.1 糖浆 Syrup 与砂糖（网状结构，混合机 + CCB 冷却）
 
 `syrup`（**混合机**：糖原料 ×4 + 水 1000mB + 加热 → 1000mB；糖原料 = 甘蔗/甜菜/苹果/甜浆果/紫颂果 + 可选玉米）。2026-09-26 从碎浆机迁至混合机——取汁是**浸出**不是打浆（操作正确性）；迁移后甘蔗不再"一料两解"：碎浆机里的甘蔗只出纸浆，混合机里的糖原料只出糖浆。
 
-**糖的阶梯结构**（2026-09-26 定案并落地）：`糖浆 →（冷却结晶）→ 糖 →（加热焦化）→ 焦糖`——两个相变方向相反（冷/热），玩家从条件即可分辨，不再有"同机同输入"的平行歧义。
+**糖有两张来源，都走 CCB 冷冻结晶**（2026-09-29 定稿；07 §1.5 网状结构）：
 
 | 配方 id | 机器/类型 | 输入 | 输出 | 依赖 |
 |---|---|---|---|---|
-| `sugar_from_syrup`（手写 JSON `data/rationality/recipe/chilled_mixing/`） | **CCB 冷冻混合**（盆 + 已充能 Breeze Cooler） | Syrup 250mB | 砂糖 ×2 | 机巧新生（`whenModLoaded` 门控） |
-| `create_confectionery:caramel_recipe`（**已撤禁**，原版配方） | 混合机（加热） | 砂糖 ×2 + 水 250mB | 焦糖 250mB | Confectionery |
-| `caramel_from_sugar` | Big Cannons 熔炼（加热） | 砂糖 ×2 | 焦糖 250mB | Cannons + Confectionery |
+| `sugar_from_syrup`（手写 JSON） | **CCB 冷冻混合**（盆 + 充能 Breeze Cooler） | 糖浆 250mB | 砂糖 ×2 | CCB（硬依赖） |
+| `sugar_from_honey`（手写 JSON） | 同上 | 蜂蜜（`c:honey`）500mB | 砂糖 ×3 | CCB（硬依赖） |
 
-> **依赖说明**：砂糖的工业来源依赖**机巧新生（CCB）的冷却系统**——CCB 缺席时糖线不可用（07 §4.4 的前置依赖线）。原版制糖禁令维持（04）；此前因与焦糖重叠而撤下的两条结晶配方已被本阶梯结构取代。
+> 手写 JSON 位于 `src/main/resources/data/rationality/recipe/chilled_mixing/`（CCB 类型自带序列化器，第三方按数据包写即可）。原版制糖禁令维持（04）；CCB 缺席时糖线不可用（现为硬依赖，见 mods.toml）。
 
 ### 5.2 焦糖线（Confectionery + Corn Delight）
 
-焦糖由**糖焦化**而来（阶梯第二级，糖浆不再直连）；`caramel`（Syrup→焦糖）与 `caramel_from_syrup` 两条旧配方已删除。
+**焦糖有三条入边**（均加热；输入各不相同 → 与冷结晶无歧义；07 §1.5）：
 
 | 配方 id | 机器/类型 | 输入 | 输出 | 依赖 |
 |---|---|---|---|---|
-| `create_confectionery:caramel_recipe`（原版，已撤禁） | 混合机（加热） | 砂糖 ×2 + 水 250mB | 焦糖 250mB | Confectionery |
+| `caramel`（直连边） | 混合机（加热） | 糖浆 1000mB | 焦糖 **400**mB | Confectionery |
+| `create_confectionery:caramel_recipe`（原版，**已撤禁**） | 混合机（加热） | 砂糖 ×2 + 水 250mB | 焦糖 250mB | Confectionery |
 | `caramel_from_sugar` | Big Cannons 熔炼（加热） | 砂糖 ×2 | 焦糖 250mB | Cannons + Confectionery |
 | `caramel_from_item` | Big Cannons 熔炼（加热） | 焦糖棒 | 焦糖 250mB | Cannons + Confectionery |
 | `caramel_popcorn` | 注液口填充 | 爆米花 + 焦糖 10mB | 焦糖爆米花 | Corn Delight + Confectionery |
+| `honey_candy_from_syrup`（**彩蛋**） | 混合机（加热） | 糖浆 250mB + 蜂蜜 250mB | 蜂蜜糖 ×2 | Confectionery |
+
+> 直连边 `caramel` 的转化比 2026-09-29 自 50% 下调至 **40%**（1000mB → 400mB）；彩蛋是"省面粉的偷懒捷径"（原版为 糖×2 + 面粉 + 蜂蜜 250 → ×4）。
 
 ### 5.3 炸油线（Bitterballen + Corn Delight）
 
