@@ -60,13 +60,9 @@ public class CRMeltingRecipeGen extends StandardProcessingRecipeGen<MeltingRecip
                 .requiresHeat(HeatCondition.HEATED)
                 .whenModLoaded(RationalMods.CONFECTIONERY.modid));
 
-        // 阶梯第二级的熔炼版：糖（×2）焦化 → 焦糖 250（与 Confectionery 原版配方的糖:焦糖比一致）
-        create("caramel_from_sugar", b -> b.whenModLoaded(RationalMods.CANNONS.modid)
-                .require(Items.SUGAR)
-                .require(Items.SUGAR)
-                .output(CreateConfectioneryModFluids.CARAMEL.get(), 250)
-                .requiresHeat(HeatCondition.HEATED)
-                .whenModLoaded(RationalMods.CONFECTIONERY.modid));
+        // 注：曾有一条"糖×2 --熔炼--> 焦糖 250"的边，2026-09-29 删除——
+        // 固体糖不含水，凭空产出含水流体违反 A3 水规则（同产物的混合机配方需要 水 250mB），
+        // 且它跳过水后严格优于那条合法边（边间支配）。焦糖的入边保留：糖浆+热、糖+水+热。
     }
 
     @Override
