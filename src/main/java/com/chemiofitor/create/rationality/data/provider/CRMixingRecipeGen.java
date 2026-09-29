@@ -75,10 +75,19 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
                 .output(CRFluids.LYE.get(), 100)
                 .output(CRItems.CALCIUM_CARBONATE));
 
-        // ── 糖路线：【已按作者决定删除，重构中】────────────────────────────
-        // 2026-09-26：糖浆→糖 与 糖浆→焦糖 是同一机器同一输入（糖浆+加热）的两条平行配方，
-        // 玩家无法从输入分辨，重叠成立。糖的生产整体撤下，待"糖浆→糖→焦糖"阶梯结构定案后重建。
-        // 原版制糖禁令维持（04），砂糖暂回零来源状态（31 条配方依赖它，见 04 审计注）。
+        // ── 糖路线 ─────────────────────────────────────────────────────────
+        // 糖浆：糖原料浸出/熬煮。原在碎浆机（操作不正确：取汁是浸出，不是打浆），
+        // 迁到混合机后甘蔗不再"一料两解"（碎浆机里的甘蔗只出纸浆）。
+        create("syrup", b -> b
+                .require(CRTagKeys.Items.SUGAR_RAW_MATERIAL)
+                .require(CRTagKeys.Items.SUGAR_RAW_MATERIAL)
+                .require(CRTagKeys.Items.SUGAR_RAW_MATERIAL)
+                .require(CRTagKeys.Items.SUGAR_RAW_MATERIAL)
+                .require(FluidTags.WATER, 1000)
+                .requiresHeat(HeatCondition.HEATED)
+                .output(CRFluids.SYRUP.get(), 1000));
+        // 待重构：糖浆 →（结晶）→ 糖 →（焦化）→ 焦糖（阶梯结构，2026-09-26 定案）。
+        // 原版制糖禁令维持（04），砂糖现为零来源（31 条配方依赖它），重建时一并解决。
 
         // 柴油动力
         create("oilpaper", b -> b.output(CRItems.OILPAPER)

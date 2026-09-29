@@ -43,15 +43,12 @@
 
 | 配方 id | 输入 | 输出 | 备注 |
 |---|---|---|---|
-| `pulp_from_pulpifiable` | `create:pulpifiable` ×4 + 水 1000mB | Pulp **500mB** | 常温简单制浆，产量减半 |
-| `pulp_from_pulpifiable_with_heat` | `create:pulpifiable` ×4 + `rationality:alkaline` ×2 + 水 1000mB + **加热** | Pulp 1000mB + **黑液 250mB** | 碱法蒸煮，主推路径 |
-| `pulp_from_pulpifiable_with_heat_and_lye` ⚠ | `create:pulpifiable` ×4 + **碱液 1000mB** + 加热 | Pulp 1000mB + 黑液 250mB | ⚠WIP 未提交；碱液路径（R2 互换已修复） |
-| `pulp_from_pulpifiable_with_heat_and_ash_lye` ⚠ | `create:pulpifiable` ×4 + **灰汁 1500mB** + 加热 | Pulp 1000mB + 黑液 250mB | ⚠WIP 未提交；灰汁路径（R2 互换已修复） |
-| `fine_pulp_from_pulp` | 生石灰 ×2 + Pulp 1000mB | Fine Pulp 1000mB | 精浆（生石灰充当碱源） |
-| `fine_pulp_from_pulp_from_lye` ⚠ | **碱液 250mB** + Pulp 1000mB | Fine Pulp 1000mB | ⚠WIP 未提交；命名略绕（`from_pulp_from_lye`），见 06-roadmap.md R2 遗留 |
-| `syrup` | `rationality:sugar_raw_material` ×4 + 水 1000mB + 加热 | Syrup 1000mB | 糖浆（D 类原料） |
+| `pulp_from_pulpifiable` | `create:pulpifiable` ×4 + 水 1000mB | Pulp **500mB** | 常温制浆，产量减半、不产黑液（无碱线时的过渡） |
+| `pulp_from_pulpifiable_with_heat_and_lye` | `create:pulpifiable` ×4 + **碱液 1000mB** + 加热 | Pulp 1000mB + **黑液 250mB** | **唯一碱法路径**（现实白液蒸煮）；制碱是制浆的前置 |
+| `fine_pulp_from_pulp_and_lye` | Pulp 1000mB + **碱液 500mB** + 加热 | Fine Pulp 1000mB + **黑液 100mB** | 碱抽提精浆（溶出残余木质素→废液） |
 
-> 碱法蒸煮是产线主推：足量制浆但副产黑液（污染源，见 02 §4 与 03 §3.3）；常温配方仅作低产应急。
+> 2026-09-26 精简（设计母文档 07 §6-1 定案）：删除"物品碱（2 碱性物）"与"灰汁 1500"两条制浆变体——三条输出相同而物品碱成本严格最低，属纯支配关系（另两条成 JEI 噪音），且不符合现实（蒸煮液只有液体白液）。连带：`rationality:alkaline` 标签失去蒸煮用途（去留见 07）；灰汁唯一去向=苛化。
+> 碱法蒸煮产黑液（污染源，见 02 §4 与 03 §3.3）；精浆同样副产黑液（守恒修正）。
 
 **碎浆机兼职配方**（同生成器）：
 
@@ -170,9 +167,9 @@
 
 ## 5. 大类 D · 食品与甜食
 
-### 5.1 糖浆 Syrup（碎浆机中制取，D 类原料）
+### 5.1 糖浆 Syrup（混合机中制取，D 类原料）
 
-`syrup`（碎浆机：糖原料 ×4 + 水 1000mB + 加热 → 1000mB，糖原料 = 甘蔗/甜菜/苹果/甜浆果/紫颂果 + 可选玉米）。下游流向：
+`syrup`（**混合机**：糖原料 ×4 + 水 1000mB + 加热 → 1000mB；糖原料 = 甘蔗/甜菜/苹果/甜浆果/紫颂果 + 可选玉米）。2026-09-26 从碎浆机迁至混合机——取汁是**浸出**不是打浆（操作正确性）；迁移后甘蔗不再"一料两解"：碎浆机里的甘蔗只出纸浆，混合机里的糖原料只出糖浆。下游流向：
 
 ```
 Syrup ──► 焦糖（5.2：Confectionery 混合 / Cannons 熔炼）

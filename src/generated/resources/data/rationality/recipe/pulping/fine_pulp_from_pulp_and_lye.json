@@ -1,9 +1,10 @@
 {
   "type": "rationality:pulping",
+  "heat_requirement": "heated",
   "ingredients": [
     {
       "type": "neoforge:tag",
-      "amount": 250,
+      "amount": 500,
       "tag": "rationality:lye"
     },
     {
@@ -16,6 +17,10 @@
     {
       "amount": 1000,
       "id": "rationality:fine_pulp"
+    },
+    {
+      "amount": 100,
+      "id": "rationality:black_liquor"
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "type": "rationality:pulping",
+  "type": "create:mixing",
   "heat_requirement": "heated",
   "ingredients": [
     {
@@ -15,9 +15,9 @@
       "tag": "rationality:sugar_raw_material"
     },
     {
-      "type": "neoforge:single",
+      "type": "neoforge:tag",
       "amount": 1000,
-      "fluid": "minecraft:water"
+      "tag": "minecraft:water"
     }
   ],
   "results": [
