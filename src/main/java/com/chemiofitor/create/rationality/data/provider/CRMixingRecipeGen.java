@@ -110,12 +110,8 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
                 .output(FluidRegistry.FRYING_OIL.get(), 1000)
                 .whenModLoaded(RationalMods.BITTERBALLEN.modid));
 
-        // 甜食
-        create("caramel", b -> b
-                .require(CRTagKeys.Fluids.SYRUP, 1000)
-                .requiresHeat(HeatCondition.HEATED)
-                .output(CreateConfectioneryModFluids.CARAMEL.get(), 500)
-                .whenModLoaded(RationalMods.CONFECTIONERY.modid));
+        // 甜食：焦糖不再由糖浆直连——阶梯结构（2026-09-26）：糖浆→（冷却结晶，CCB）→糖→（加热焦化）→焦糖。
+        // 第二级恢复使用 Confectionery 原版配方（糖×2 + 水250 + 加热 → 焦糖 250，见 04 已撤禁令）。
 
         // 屠夫乐事
         create("lard_from_heated", b -> b

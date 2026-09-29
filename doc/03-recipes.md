@@ -167,22 +167,28 @@
 
 ## 5. 大类 D · 食品与甜食
 
-### 5.1 糖浆 Syrup（混合机中制取，D 类原料）
+### 5.1 糖浆 Syrup 与砂糖（阶梯结构，混合机 + CCB 冷却）
 
-`syrup`（**混合机**：糖原料 ×4 + 水 1000mB + 加热 → 1000mB；糖原料 = 甘蔗/甜菜/苹果/甜浆果/紫颂果 + 可选玉米）。2026-09-26 从碎浆机迁至混合机——取汁是**浸出**不是打浆（操作正确性）；迁移后甘蔗不再"一料两解"：碎浆机里的甘蔗只出纸浆，混合机里的糖原料只出糖浆。下游流向：
+`syrup`（**混合机**：糖原料 ×4 + 水 1000mB + 加热 → 1000mB；糖原料 = 甘蔗/甜菜/苹果/甜浆果/紫颂果 + 可选玉米）。2026-09-26 从碎浆机迁至混合机——取汁是**浸出**不是打浆（操作正确性）；迁移后甘蔗不再"一料两解"：碎浆机里的甘蔗只出纸浆，混合机里的糖原料只出糖浆。
 
-```
-Syrup ──► 焦糖（5.2：Confectionery 混合 / Cannons 熔炼）
-   └──► 乙醇（E 类：CDG 发酵）
-```
-
-> **砂糖（minecraft:sugar）来源：重构中（2026-09-26 撤下）。** 原版制糖配方已禁（04），而此前新增的 `sugar_from_syrup` / `sugar_from_honey` 两条结晶配方因**糖浆→糖 与 糖浆→焦糖 是同一机器同一输入（糖浆+加热）的平行配方、玩家无法从输入分辨**而被删除。重构方向待定：推荐"阶梯结构"——糖浆→（结晶）→糖→（焦化）→焦糖，即恢复 Confectionery 原版 `sugar+水→焦糖` 的阶梯语义（04 相应撤回该禁令）。**注意：砂糖当前回到零来源状态，全实例 31 条配方（蛋糕、派、发酵蛛眼等）依赖它，重构前是已知缺口**。
-
-### 5.2 焦糖线（Confectionery + Corn Delight）
+**糖的阶梯结构**（2026-09-26 定案并落地）：`糖浆 →（冷却结晶）→ 糖 →（加热焦化）→ 焦糖`——两个相变方向相反（冷/热），玩家从条件即可分辨，不再有"同机同输入"的平行歧义。
 
 | 配方 id | 机器/类型 | 输入 | 输出 | 依赖 |
 |---|---|---|---|---|
-| `caramel` | 混合机（加热） | Syrup 1000mB | 焦糖 500mB | Confectionery |
+| `sugar_from_syrup`（手写 JSON `data/rationality/recipe/chilled_mixing/`） | **CCB 冷冻混合**（盆 + 已充能 Breeze Cooler） | Syrup 250mB | 砂糖 ×2 | 机巧新生（`whenModLoaded` 门控） |
+| `create_confectionery:caramel_recipe`（**已撤禁**，原版配方） | 混合机（加热） | 砂糖 ×2 + 水 250mB | 焦糖 250mB | Confectionery |
+| `caramel_from_sugar` | Big Cannons 熔炼（加热） | 砂糖 ×2 | 焦糖 250mB | Cannons + Confectionery |
+
+> **依赖说明**：砂糖的工业来源依赖**机巧新生（CCB）的冷却系统**——CCB 缺席时糖线不可用（07 §4.4 的前置依赖线）。原版制糖禁令维持（04）；此前因与焦糖重叠而撤下的两条结晶配方已被本阶梯结构取代。
+
+### 5.2 焦糖线（Confectionery + Corn Delight）
+
+焦糖由**糖焦化**而来（阶梯第二级，糖浆不再直连）；`caramel`（Syrup→焦糖）与 `caramel_from_syrup` 两条旧配方已删除。
+
+| 配方 id | 机器/类型 | 输入 | 输出 | 依赖 |
+|---|---|---|---|---|
+| `create_confectionery:caramel_recipe`（原版，已撤禁） | 混合机（加热） | 砂糖 ×2 + 水 250mB | 焦糖 250mB | Confectionery |
+| `caramel_from_sugar` | Big Cannons 熔炼（加热） | 砂糖 ×2 | 焦糖 250mB | Cannons + Confectionery |
 | `caramel_from_item` | Big Cannons 熔炼（加热） | 焦糖棒 | 焦糖 250mB | Cannons + Confectionery |
 | `caramel_popcorn` | 注液口填充 | 爆米花 + 焦糖 10mB | 焦糖爆米花 | Corn Delight + Confectionery |
 

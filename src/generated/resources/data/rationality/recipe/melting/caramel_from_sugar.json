@@ -13,14 +13,15 @@
   "heat_requirement": "heated",
   "ingredients": [
     {
-      "type": "neoforge:single",
-      "amount": 1000,
-      "fluid": "rationality:syrup"
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:sugar"
     }
   ],
   "results": [
     {
-      "amount": 500,
+      "amount": 250,
       "id": "create_confectionery:caramel"
     }
   ]

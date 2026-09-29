@@ -2,7 +2,6 @@ package com.chemiofitor.create.rationality.data.provider;
 
 import com.chemiofitor.create.rationality.CreateRationality;
 import com.chemiofitor.create.rationality.compat.RationalMods;
-import com.chemiofitor.create.rationality.index.CRFluids;
 import com.simibubi.create.AllFluids;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.data.recipe.StandardProcessingRecipeGen;
@@ -61,9 +60,11 @@ public class CRMeltingRecipeGen extends StandardProcessingRecipeGen<MeltingRecip
                 .requiresHeat(HeatCondition.HEATED)
                 .whenModLoaded(RationalMods.CONFECTIONERY.modid));
 
-        create("caramel_from_syrup", b -> b.whenModLoaded(RationalMods.CANNONS.modid)
-                .require(CRFluids.SYRUP.get(), 1000)
-                .output(CreateConfectioneryModFluids.CARAMEL.get(), 500)
+        // 阶梯第二级的熔炼版：糖（×2）焦化 → 焦糖 250（与 Confectionery 原版配方的糖:焦糖比一致）
+        create("caramel_from_sugar", b -> b.whenModLoaded(RationalMods.CANNONS.modid)
+                .require(Items.SUGAR)
+                .require(Items.SUGAR)
+                .output(CreateConfectioneryModFluids.CARAMEL.get(), 250)
                 .requiresHeat(HeatCondition.HEATED)
                 .whenModLoaded(RationalMods.CONFECTIONERY.modid));
     }

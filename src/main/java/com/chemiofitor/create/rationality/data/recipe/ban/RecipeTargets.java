@@ -45,8 +45,8 @@ public class RecipeTargets {
         // corn -> paper
         add("corn_delight", "paper_from_corncob");
 
-        // sugar + water -> caramel
-        add("create_confectionery", "caramel_recipe");
+        // 焦糖阶梯（2026-09-26）：糖→焦糖是现实工艺（焦化），Confectionery 原版 caramel_recipe 已撤禁，
+        // 作为阶梯第二级使用（糖浆→糖→焦糖）
         add("corn_delight", "caramel_popcorn");
 
         if (RationalMods.DIESEL_GENERATORS.isLoaded) {
