@@ -40,7 +40,7 @@
 | [04-recipe-ban.md](04-recipe-ban.md) | 配方禁令系统：机制与完整删除清单 | 要覆盖其他模组配方 |
 | [05-development.md](05-development.md) | 开发工作流：命令、注册/datagen/mixin/网络规则、已知注意点 | 准备写代码 |
 | [06-roadmap.md](06-roadmap.md) | 后续发展建议：现状盘点、WIP 收尾、玩法/技术/联动/发布路线图 | 规划下一步 |
-| [07-production-redesign.md](07-production-redesign.md) | 社区反馈（BV1SAgL6QEKS 评论）驱动的产线重构设计：黑液枢纽/石灰建材/氯碱/有机线 + 与 06 的冲突待决清单 | 规划重构、评估社区诉求 |
+| [07-design-principles.md](07-design-principles.md) | **设计母文档**：原则集（母/派生/执行 + 裁决顺序）、现状诊断、机巧新生接入面、逐线蓝图、决策记录与待决项 | 任何立项、改配方、加联动的准入依据 |
 
 ## 建议阅读顺序
 
