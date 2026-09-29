@@ -182,17 +182,17 @@
 
 ### 5.2 焦糖线（Confectionery + Corn Delight）
 
-**焦糖有三条入边**（均加热；输入各不相同 → 与冷结晶无歧义；07 §1.5）：
+**焦糖有两条入边 + 一条逆向回收**（均加热；输入各不相同 → 与冷结晶无歧义；07 §1.5）：
 
 | 配方 id | 机器/类型 | 输入 | 输出 | 依赖 |
 |---|---|---|---|---|
-| `caramel`（直连边） | 混合机（加热） | 糖浆 1000mB | 焦糖 **400**mB | Confectionery |
+| `caramel`（直连边） | 混合机（加热） | 糖浆 1000mB | 焦糖 **750**mB | Confectionery |
 | `create_confectionery:caramel_recipe`（原版，**已撤禁**） | 混合机（加热） | 砂糖 ×2 + 水 250mB | 焦糖 250mB | Confectionery |
 | `caramel_from_item` | Big Cannons 熔炼（加热） | 焦糖棒 | 焦糖 250mB | Cannons + Confectionery |
 | `caramel_popcorn` | 注液口填充 | 爆米花 + 焦糖 10mB | 焦糖爆米花 | Corn Delight + Confectionery |
 | `honey_candy_from_syrup`（**彩蛋**） | 混合机（加热） | 糖浆 250mB + 蜂蜜 250mB | 蜂蜜糖 ×2 | Confectionery |
 
-> 直连边 `caramel` 的转化比 2026-09-29 自 50% 下调至 **40%**；彩蛋是"省面粉的偷懒捷径"（原版为 糖×2 + 面粉 + 蜂蜜 250 → ×4）。
+> 直连边 `caramel`：1000mB 糖浆 → **750mB** 焦糖（2026-09-29 作者定数；低于糖路线的 1000/1000，保留"直连省设备、阶梯高产出"的取舍）。彩蛋是"省面粉的偷懒捷径"（原版为 糖×2 + 面粉 + 蜂蜜 250 → ×4）。
 > **已删除**：`melting/caramel_from_sugar`（糖×2 熔炼 → 焦糖 250）——固体糖不含水，凭空产出含水流体违反 A3 水规则，且跳过水后严格优于合法边（07 §1.1）。
 
 ### 5.3 炸油线（Bitterballen + Corn Delight）

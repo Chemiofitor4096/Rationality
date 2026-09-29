@@ -90,12 +90,12 @@ public class CRMixingRecipeGen extends MixingRecipeGen {
         // 糖的两条来源（均为 CCB 冷冻结晶，手写 JSON 见 src/main/resources/data/rationality/recipe/chilled_mixing/）：
         //   sugar_from_syrup：糖浆 250mB → 砂糖×2     ｜ sugar_from_honey：蜂蜜 500mB → 砂糖×3
         // 焦糖的两条来源（互不冲突——输入不同 / 条件相反，见下）：
-        //   本配方：糖浆 1000mB + 加热 → 焦糖 400（直连边；2026-09-29 比例从 500 下调）
+        //   本配方：糖浆 1000mB + 加热 → 焦糖 750（直连边，2026-09-29 作者定数；低于糖路线的 1000/1000 以保留 "直连省设备、阶梯高产出" 的取舍）
         //   Confectionery 原版 caramel_recipe：砂糖×2 + 水250 + 加热 → 焦糖 250（已撤禁）
         create("caramel", b -> b
                 .require(CRTagKeys.Fluids.SYRUP, 1000)
                 .requiresHeat(HeatCondition.HEATED)
-                .output(CreateConfectioneryModFluids.CARAMEL.get(), 400)
+                .output(CreateConfectioneryModFluids.CARAMEL.get(), 750)
                 .whenModLoaded(RationalMods.CONFECTIONERY.modid));
 
         // 彩蛋：糖浆 + 蜂蜜 → 蜂蜜糖（偷懒捷径，省面粉但产量减半；原版为 糖×2 + 面粉 + 蜂蜜250 → ×4）
