@@ -101,13 +101,8 @@ repositories {
         }
     }
     maven {
-        name = "CraftGraph"
         url = "https://maven.kessokuteatime.work/releases"
-        content {
-            includeGroup "dev.craftgraph"
-        }
     }
-    flatDir { dir 'libs' }
 }
 
 dependencies {
@@ -145,7 +140,7 @@ dependencies {
 
     implementation("maven.modrinth:create-liquid-fuel:${liquid_fuel_version}")
 
-    implementation("blank:createcraftedbeginning:${crafted_beginning_version}")
+    implementation("net.ty.createcraftedbeginning:createcraftedbeginning:${crafted_beginning_version}")
 
     // Dev-environment only: CraftGraph lets AI tooling read the running game's recipes over a
     // local HTTP API. It is a client-side mod (side = CLIENT in its metadata), so it is skipped

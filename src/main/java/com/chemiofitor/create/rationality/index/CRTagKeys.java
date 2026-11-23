@@ -46,7 +46,7 @@ public class CRTagKeys {
         public static final TagKey<Fluid> BLACK_LIQUOR = create("rationality", "black_liquor");
         public static final TagKey<Fluid> CONCENTRATED_BLACK_LIQUOR = create("rationality", "concentrated_black_liquor");
         public static final TagKey<Fluid> LYE = create("rationality", "lye");
-    public static final TagKey<Fluid> LIME_MILK = create("rationality", "lime_milk");
+        public static final TagKey<Fluid> LIME_MILK = create("rationality", "lime_milk");
         public static final TagKey<Fluid> GLYCEROL = create("rationality", "glycerol");
         public static final TagKey<Fluid> YEAST_LIQUID = create("rationality", "yeast_liquid");
         public static final TagKey<Fluid> RAW_YEAST_LIQUID = create("rationality", "raw_yeast_liquid");
